@@ -1,0 +1,6 @@
+.tools/
+artifacts/
+playwright-report/
+test-results/
+*.log
+.env*

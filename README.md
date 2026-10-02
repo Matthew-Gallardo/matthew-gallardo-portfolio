@@ -1,0 +1,132 @@
+# Matthew Gallardo — portfolio
+
+A content-focused portfolio for a backend software engineer working in banking and digital payments. Built as a fresh Next.js application, separate from the existing React/Create React App portfolio.
+
+## Develop and verify
+
+Use **Node.js 24.x** and npm. `.nvmrc` and `package.json` specify the runtime. Commit `package-lock.json`; do not introduce another package manager's lockfile.
+
+```sh
+npm ci --strict-peer-deps
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+```sh
+npm run typecheck
+npm run lint
+npm run build
+npm run start
+```
+
+The build first validates content and then prerenders the pages. `npm run check` runs type checking, linting and production build together. `next/font` downloads Geist at build time and self-hosts it; an initial build needs network access to Google Fonts.
+
+```sh
+npx playwright install chromium firefox webkit
+npm run test:e2e
+```
+
+On Linux, use `npx playwright install --with-deps chromium firefox webkit`. Tests start the production server automatically, so build first. Chromium runs detailed coverage; Firefox and WebKit cover rendering, themes, navigation and console errors. Axe checks both pages and the mobile dialog in each theme. Test fixtures isolate WakaTime availability from application correctness.
+
+To test an already-running local or accessible preview server, set the optional test-only `PLAYWRIGHT_BASE_URL` environment variable. It is not a deployment secret or application requirement.
+
+## Stack and structure
+
+- Next.js App Router, React, strict TypeScript, Tailwind CSS, semantic CSS custom properties.
+- Static Server Components for content; small client components for themes, navigation, clipboard, media errors and selected Motion entrances.
+- Geist Sans/Mono with `next/font`; raster assets through `next/image`; Lucide UI icons.
+- Local typed content, no CMS, database, authentication, contact backend, analytics, or required paid services.
+
+```text
+src/app/                  Routes, global styles and metadata assets
+src/components/layout/    Desktop rail, mobile dialog and footer
+src/components/sections/  Homepage content
+src/components/projects/  Project presentation
+src/components/ui/        Theme, media, clipboard and animation
+src/content/              Editable profile, projects, experience, skills, education, activity
+src/types/content.ts      Readonly content contracts
+src/lib/                  Metadata and safe local image lookup
+public/resume/            Downloadable PDF
+public/images/            Optional supplied portrait and project screenshots
+scripts/                  Build-time content validation
+tests/e2e/                Focused interaction and accessibility checks
+docs/                     Sources, attribution and verification record
+```
+
+Versions were selected together using package peer requirements. Next.js 16.3.8 and React 19.3.0 are paired with Tailwind 4.3.3 and Motion 14.0.0. ESLint 9.39.5 and TypeScript 6.0.3 match the supported ranges of Next's lint tooling; newer incompatible major versions were not forced. Recheck official documentation and peer dependencies during upgrades.
+
+## Edit content
+
+Edit the appropriate file under `src/content/`. Data uses readonly TypeScript models; errors appear during type checking. `npm run validate:content` verifies seven unique projects, featured ordering, links, resume presence, all-time WakaTime configuration and interface-copy constraints.
+
+Evidence lives in [the content ledger](docs/content-sources.md), separate from public copy. Prefer Matthew's resume for employment, education and professional achievements. Confirm personal contributions before adding them. Do not infer professional experience from the technologies used to build this website.
+
+The home page has section anchors and three selected projects. `/projects` contains all seven. There are no project detail routes in this release. Only SackCal has a verified published demo link.
+
+## Replace the portrait or project images
+
+The initial site intentionally uses MG and project-preview placeholders. To add Matthew's supplied photo:
+
+1. Keep the original privately; place an optimized publication copy, such as `matthew.webp`, in `public/images/portrait/`.
+2. Add `portrait: { src: "/images/portrait/matthew.webp", alt: "Matthew Gallardo", width: 800, height: 800, focalPosition: "50% 50%" }` to `src/content/profile.ts`, replacing dimensions with the real image dimensions.
+3. Preview the centered square crop at mobile and desktop sizes. Adjust only `focalPosition` if required; do not retouch or generate a replacement face.
+
+For a project, add an approved screenshot under `public/images/projects/` and add its `image` object to the matching project. Write useful alt text and real dimensions. Preview frames are 16:9 and contain the image without cropping its content. Missing local files and runtime image failures retain intentional placeholders. Only local `/images/` raster assets are supported.
+
+Record provenance and permissions in [asset attribution](docs/asset-attribution.md). Do not import old screenshots until they have been checked for rights, sensitive content and readability.
+
+## Resume and contact
+
+Replace `public/resume/matthew-gallardo-resume-2026.pdf` with an approved PDF, or update `profile.resume` if its filename changes. The download uses a relative public URL and an attachment header, with no embedded PDF viewer. The supplied PDF still references the old website URL; it has not been rewritten.
+
+Contact uses a working `mailto:` link and optional clipboard action with accessible success/failure feedback. The page exposes the email as selectable text. There is no contact-form delivery service.
+
+## WakaTime
+
+`src/content/activity.ts` holds the public profile, tracked-time badge and language chart URLs. Images load directly from WakaTime without a key, proxy, script, iframe, polling or backend request. The chart is labeled **all time**, uses a dark inset for its white labels, reserves an 800:600 ratio and sits inside a native disclosure. The badge remains visible outside it.
+
+Do not hardcode totals, rename the period to weekly, or present activity as productivity. A failed image shows an unavailable message; it never displays invented zero values. Provider failure cannot fail a build. Browser tests mock provider responses; manually verify the live provider before release.
+
+## Themes and accessibility
+
+The first visit follows system preference. The explicit System/Light/Dark selection persists under `mg-portfolio-theme`. The pre-paint `next-themes` script avoids theme flashes; only the root HTML element suppresses expected hydration differences. CSS also supports the system theme without JavaScript.
+
+The mobile menu uses a native modal dialog, contained Tab navigation, Escape dismissal, scroll locking and focus restoration. Section destinations account for the sticky header. A no-JavaScript section navigation remains available. Reduced motion disables translations and smooth scrolling. No content depends on an animation becoming visible.
+
+## Repository and Vercel deployment
+
+This repository is intended to be public at `Matthew-Gallardo/matthew-gallardo-portfolio`, with a clean `main` branch. The original `Matthew-Gallardo/Portfolio` repository and its deployment are independent.
+
+In Vercel, import this repository into a **new** project:
+
+- Framework: Next.js.
+- Root directory: repository root.
+- Node.js: 24.x.
+- Install: `npm ci`.
+- Build: `npm run build`.
+- Output: standard Next.js default; do not set an export directory.
+- No user-defined environment variables or secrets are required.
+
+Vercel provides its own `VERCEL_ENV` and deployment URL system variables. `main` is the production branch; pull requests and other branches create previews. GitHub Actions independently runs quality checks. Keep normal preview access protection; do not disable it just to run automated tests. Use an authorized preview/share URL when access is protected.
+
+For manual CLI deployment after sign-in:
+
+```sh
+npx vercel link
+npx vercel deploy
+```
+
+Link explicitly to the new project. The default deploy creates a preview. Inspect that preview before promoting a deployment to the new project's production URL. Do not reassign or replace `gallardo-matthew.vercel.app` as part of this release.
+
+## Metadata and domain changes
+
+Set `productionOrigin` in `src/content/site.ts` to the new verified HTTPS production origin when assigned. Until configured, metadata remains non-indexable and the sitemap is empty. Preview deployments retain `noindex`; only Vercel production builds with a configured origin enable indexing.
+
+For a future domain change, connect and verify the domain in Vercel, update that single origin setting, rebuild and redeploy. Check both canonical URLs, the Open Graph image URL, sitemap and robots. Update the resume separately if Matthew supplies a revised PDF. Never put a Windows path into a website URL.
+
+## Release and rollback
+
+Check both content routes, desktop/mobile in both themes, resume, contact, WakaTime success/failure, headings, keyboard focus, console, metadata, sitemap, robots and HTTPS. Record Lighthouse measurements and review any deviations from the 90 performance / 95 accessibility, best-practices and SEO targets. Preview noindex is intentional and can lower its SEO audit score.
+
+Promote only a reviewed deployment. If an issue appears, restore a previous known-good deployment in the **new** Vercel project and revert the corresponding source change. Neither rollback nor preview testing requires touching the existing portfolio.
