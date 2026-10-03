@@ -8,6 +8,4 @@ export const activity: ActivityConfig = {
   chartUrl:
     "https://wakatime.com/share/@MattG/013dd8d7-02cf-4cb1-ac50-8cd52de73048.svg",
   period: "All time",
-  caption:
-    "Reflects tracked editor activity and may not include all professional work.",
 };

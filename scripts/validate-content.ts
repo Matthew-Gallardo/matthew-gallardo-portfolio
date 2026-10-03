@@ -14,7 +14,19 @@ function https(value: string, host?: string) {
   if (host) assert.equal(url.hostname, host);
 }
 
-assert.equal(projects.length, 7, "All seven verified projects are required.");
+assert.equal(
+  projects.length,
+  8,
+  "The professional project and all seven academic projects are required.",
+);
+assert.equal(
+  projects.filter((project) => project.kind === "academic").length,
+  7,
+);
+assert.equal(
+  projects.filter((project) => project.kind === "professional").length,
+  1,
+);
 assert.equal(
   new Set(projects.map((project) => project.slug)).size,
   projects.length,
@@ -22,11 +34,11 @@ assert.equal(
 );
 assert.deepEqual(
   featuredProjects.map((project) => project.featuredOrder),
-  [1, 2, 3],
+  [1, 2, 3, 4],
 );
 assert.deepEqual(
   featuredProjects.map((project) => project.slug),
-  ["cast-type", "easypc", "illuscan"],
+  ["security-bank-app", "cast-type", "easypc", "illuscan"],
 );
 assert.equal(projects.filter((project) => project.demo).length, 1);
 for (const project of projects) {
@@ -37,7 +49,15 @@ for (const project of projects) {
       project.technologies.length,
     `Incomplete project: ${project.slug}`,
   );
-  https(project.repository, "github.com");
+  if (project.kind === "academic")
+    assert(project.repository, `Academic source missing: ${project.slug}`);
+  if (project.kind === "professional")
+    assert(
+      project.website && project.contribution,
+      "Professional work needs a public page and supported contribution.",
+    );
+  if (project.repository) https(project.repository, "github.com");
+  if (project.website) https(project.website, "www.securitybank.com");
   if (project.demo) https(project.demo);
   if (project.image) {
     assert(project.image.src.startsWith("/images/"));
@@ -75,5 +95,5 @@ assert(
   "Interface content must not contain emoji.",
 );
 console.log(
-  "Content validation passed: seven projects, supported links, resume, and WakaTime configuration.",
+  "Content validation passed: one professional and seven academic projects, supported links, resume, and WakaTime configuration.",
 );

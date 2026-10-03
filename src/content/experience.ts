@@ -4,7 +4,7 @@ export const experience: readonly Experience[] = [
   {
     employer: "Security Bank Corporation",
     title: "Backend Software Engineer",
-    start: "2024-09",
+    start: "2024-09-02",
     period: "Sep 2024 — Present",
     location: "Makati, Metro Manila",
     introduction:

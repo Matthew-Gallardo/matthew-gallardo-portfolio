@@ -21,15 +21,18 @@ export default function ProjectsPage() {
         </Link>
         <p className="eyebrow">PROJECT INVENTORY</p>
         <h1>
-          Things I’ve built<span className="accent">.</span>
+          Work & projects<span className="accent">.</span>
         </h1>
         <p>
-          University projects exploring full-stack applications, database
-          systems, machine learning, and algorithms.
+          Professional contributions to digital banking, alongside university
+          projects exploring full-stack applications, database systems, machine
+          learning, and algorithms.
         </p>
         <div className="inventory-note">
-          <span className="mono">07 PROJECTS</span>
-          <span>Academic work, with source code.</span>
+          <span className="mono">
+            {String(projects.length).padStart(2, "0")} PROJECTS
+          </span>
+          <span>1 professional project · 7 academic projects</span>
         </div>
       </header>
       <div className="projects-grid">

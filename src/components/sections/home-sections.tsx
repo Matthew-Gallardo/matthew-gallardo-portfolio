@@ -19,6 +19,7 @@ import { CopyEmail } from "@/components/ui/copy-email";
 import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
 import { ProjectCard } from "@/components/projects/project-card";
+import { CareerClock } from "@/components/ui/career-clock";
 
 export function Hero() {
   return (
@@ -41,6 +42,7 @@ export function Hero() {
       <div className="hero-copy">
         <p className="hero-headline">{profile.headline}</p>
         <p className="hero-description">{profile.introduction}</p>
+        <CareerClock />
         <div className="hero-actions">
           <Link href="/#projects" className="button button-primary">
             View projects
@@ -82,9 +84,9 @@ export function SelectedProjects() {
   return (
     <Section
       id="projects"
-      number="01"
+      number="03"
       title="Selected projects"
-      intro="Selected university projects spanning full-stack applications, database systems, and machine learning."
+      intro="Professional contributions in banking and digital payments, alongside university projects in full-stack development, databases, and machine learning."
       action={{ href: "/projects", label: "All projects" }}
     >
       <div className="project-list">
@@ -100,12 +102,17 @@ export function SelectedProjects() {
 
 export function ExperienceSection() {
   return (
-    <Section id="experience" number="02" title="Professional experience">
+    <Section id="experience" number="01" title="Professional experience">
       <div className="experience-list">
         {experience.map((job) => (
           <article className="experience-item" key={job.employer}>
+            <span
+              className={`timeline-marker ${!job.end ? "timeline-current" : ""}`}
+              aria-hidden="true"
+            />
             <div className="experience-meta">
               <p className="mono">{job.period}</p>
+              {!job.end && <span className="current-role">Current role</span>}
               <p>{job.location}</p>
             </div>
             <div className="experience-copy">
@@ -136,7 +143,7 @@ export function StackSection() {
   return (
     <Section
       id="stack"
-      number="03"
+      number="02"
       title="Technical stack"
       intro="Technologies used across my professional work and academic projects."
     >
@@ -199,7 +206,6 @@ export function CodingActivity() {
           </figure>
         </details>
       </div>
-      <p className="activity-caption">{activity.caption}</p>
     </Section>
   );
 }

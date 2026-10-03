@@ -20,14 +20,12 @@ test("page renders without hydration errors and navigation works", async ({
   );
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page
-    .getByRole("combobox", { name: "Color theme" })
-    .first()
-    .selectOption("dark");
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.getByRole("switch", { name: "Dark mode" }).first().click();
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/dark/);
   await page.getByRole("link", { name: "All projects", exact: true }).click();
-  await expect(page.locator("[data-project]")).toHaveCount(7);
+  await expect(page.locator("[data-project]")).toHaveCount(8);
   await page.setViewportSize({ width: 375, height: 812 });
   const trigger = page.getByRole("button", { name: "Open navigation" });
   await trigger.click();

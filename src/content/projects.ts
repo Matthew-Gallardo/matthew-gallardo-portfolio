@@ -2,7 +2,28 @@ import type { Project } from "../types/content.ts";
 
 export const projects: readonly Project[] = [
   {
+    slug: "security-bank-app",
+    name: "Security Bank App",
+    kind: "professional",
+    category: "Professional work / Banking & digital payments",
+    summary:
+      "Backend development and production support for payments and transfers in the Security Bank mobile app, including QRPH, InstaPay, PESONet, and Prepaid Mobile Reload.",
+    contribution:
+      "As part of the Payments & Transfers Squad, I contributed to PESONet’s end-to-end development and production release, led backend development for Prepaid Mobile Reload, and contributed to the QRPH peer-to-peer rollout.",
+    technologies: [
+      "Java",
+      "Spring WebFlux",
+      "GraphQL",
+      "Apache Kafka",
+      "MongoDB",
+      "AWS",
+    ],
+    website: "https://www.securitybank.com/apps/personal-banking/",
+    featuredOrder: 1,
+  },
+  {
     slug: "cast-type",
+    kind: "academic",
     name: "Cast Type",
     category: "University project / Full-stack",
     summary:
@@ -18,10 +39,11 @@ export const projects: readonly Project[] = [
     ],
     repository:
       "https://github.com/Matthew-Gallardo/MERN-E-Commerce-for-Mechanical-Keyboards",
-    featuredOrder: 1,
+    featuredOrder: 2,
   },
   {
     slug: "easypc",
+    kind: "academic",
     name: "EasyPC Database Management System",
     category: "University project / Java & databases",
     summary:
@@ -29,10 +51,11 @@ export const projects: readonly Project[] = [
     technologies: ["Java", "Swing", "MySQL"],
     repository:
       "https://github.com/Matthew-Gallardo/Database-PoS-Inventory-System-for-EasyPc",
-    featuredOrder: 2,
+    featuredOrder: 3,
   },
   {
     slug: "illuscan",
+    kind: "academic",
     name: "Illuscan",
     category: "University thesis / Machine learning",
     summary:
@@ -40,10 +63,11 @@ export const projects: readonly Project[] = [
     technologies: ["Python", "LBP", "DWT", "SVM"],
     repository:
       "https://github.com/Deynnnyellll/Detection-of-GAN-Generated-Images-using-Spatial-Frequency-Domain-Fusion-Data",
-    featuredOrder: 3,
+    featuredOrder: 4,
   },
   {
     slug: "freedom-wall",
+    kind: "academic",
     name: "Open Source Freedom Wall",
     category: "University project / Full-stack",
     summary:
@@ -60,6 +84,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "camanava",
+    kind: "academic",
     name: "Temperature Forecast and Prediction in CAMANAVA",
     category: "University project / Machine learning",
     summary:
@@ -75,6 +100,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "voxtunes",
+    kind: "academic",
     name: "VoxTunesAI",
     category: "University project / Android",
     summary:
@@ -85,6 +111,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "sackcal",
+    kind: "academic",
     name: "SackCal",
     category: "University project / Algorithms",
     summary:

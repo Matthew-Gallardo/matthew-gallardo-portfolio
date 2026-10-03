@@ -1,35 +1,44 @@
 # Verification record
 
-Validation date: 3 October 2026 (Asia/Manila). The supplied portrait remains pending; MG is the approved production fallback.
+Validation date: 3 October 2026 (Asia/Manila). Matthew's supplied portrait remains pending; MG is the approved fallback.
 
-## Local checks
+## Revision checks
 
-- Strict dependency installation completed successfully with the committed npm lockfile; npm reported zero vulnerabilities. ESLint 9 is retained because Next's current lint tooling does not support ESLint 10's peer range.
 - Type checking, linting, content validation and static production build passed.
-- Initial complete browser pass: 21 Chromium/WebKit checks passed. Firefox could not launch on this Windows host because its side-by-side runtime configuration is missing; this is a browser installation error before any page loads. Firefox remains enabled in Linux CI.
-- Five widths (320, 375, 768, 1024, 1440) and both themes passed overflow and placeholder checks on both content routes.
-- Theme persistence, changing system preference, mobile menu focus/Tab/Escape, anchor navigation, clipboard success/denial, resume download, mailto, seven projects, WakaTime success/failure and keyboard disclosure, reduced motion and no-JavaScript essentials were covered.
-- Axe scans found no WCAG A/AA violations on either page or the mobile dialog in light/dark mode.
-- Live browser captures of both routes at 375px and 1440px in both themes recorded no browser console errors and no horizontal overflow. The public WakaTime badge and chart loaded successfully. Provider data was not copied into source.
+- Three unit checks passed for career-calendar duration, anniversaries, before-start behavior and month-end boundaries.
+- All 24 local Chromium/WebKit browser checks passed. The suite verifies the light/dark switch, Auto/system preference, persistence, pause/resume timer, experience-first order, professional project, seven academic projects, mobile focus/Tab/Escape, anchors, clipboard success/failure, resume, mailto, WakaTime themes/failure/disclosure, reduced motion and no-JavaScript essentials.
+- Both routes passed responsive checks at 320, 375, 768, 1024 and 1440px in both themes, with intentional media placeholders and no horizontal overflow.
+- Axe scans found no WCAG A/AA violations on either route or the mobile dialog in light and dark mode.
+- Desktop/mobile visual captures at 1440/375px in both themes recorded no console errors. The live WakaTime badge and chart loaded, with dark labels on the light chart canvas and original labels in dark mode. Provider values are never copied into source.
+- Firefox cannot launch on this Windows host because its side-by-side native runtime is missing. Linux CI includes Firefox; this host limitation is not treated as a passed test.
 
-## Initial Lighthouse mobile audit
+## Dependency audit
 
-Measured against the local production build with preview indexing disabled:
+Strict peer-dependency installation succeeds with the committed npm lockfile. ESLint 9 is retained because Next's current lint tooling does not support ESLint 10's peer range.
+
+The release audit reports **zero production dependency vulnerabilities** (`npm audit --omit=dev`). The full tooling audit reports five high entries tracing to one unpatched advisory in `braces`, through `micromatch`, `fast-glob` and Next's ESLint configuration: [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). It concerns deeply nested input patterns exhausting the stack. This portfolio does not accept user-supplied glob patterns, and the affected chain is development lint tooling. No patched braces version was available (latest 3.0.3). The suggested forced downgrade to Next 14's lint configuration is incompatible with this stack and was not applied. Recheck when upstream publishes a compatible fix.
+
+## Deployment and CI
+
+- Public repository: [Matthew-Gallardo/matthew-gallardo-portfolio](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio).
+- New Vercel project: `matthew-gallardo-portfolio`, ID `prj_DLY6DLywgPvWXTMOmth92y3lGhCv`, Node.js 24.x.
+- Production: [matthew-gallardo-portfolio.vercel.app](https://matthew-gallardo-portfolio.vercel.app).
+- Revision preview: [protected Vercel preview](https://matthew-gallardo-portfolio-etvpa44t1-matthewgallardos-projects.vercel.app), deployment `dpl_Bsn55vXimVk5Fh6tj7RNJ1vVpJYR`, READY.
+- This Vercel preview was visually reviewed at 375px and 1440px in both themes, including the hero timer, navigation, timeline, project inventory and live activity chart. Both routes reported no console errors or overflow. Preview robots metadata remained noindex.
+- GitHub is connected to the new Vercel project, with `main` as production branch. Preview access protection remains enabled; authenticated CLI access is used for review.
+- The initial implementation's [CI run](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio/actions/runs/37075307258) passed all checks and 22 browser tests across Chromium, Firefox and WebKit. Revised CI results are recorded after publication.
+- The existing `Portfolio` repository and `gallardo-matthew.vercel.app` deployment remain independent and untouched.
+
+## Lighthouse mobile measurements
+
+Initial deployed production results, before the requested UI revisions:
 
 | Page | Performance | Accessibility | Best practices | SEO | LCP | CLS | TBT |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Home | 97 | 100 | 100 | 66 | 2.6s | 0 | 70ms |
-| Projects | 97 | 98 | 100 | 63 | 2.4s | 0 | 110ms |
+| Home | 98 | 100 | 100 | 100 | 2.1s | 0 | 130ms |
+| Projects | 99 | 100 | 100 | 100 | 2.0s | 0 | 100ms |
 
-The projects audit identified a skipped heading level and a mismatch between “Live demo” and its accessible name. Both were corrected before deployment. Low preview SEO scores reflect deliberate `noindex` and crawler blocking, not the intended production policy. Final deployment measurements and CI results are recorded below once available.
-
-Lighthouse is a lab sample. Real-user INP and field Core Web Vitals require traffic and are not established by these tests. Home LCP in the initial run was slightly above the 2.5s target; deployed measurements will determine whether further optimization is needed.
-
-## Deployment verification
-
-Pending first preview review and remote CI completion.
-
-The new Vercel project is `matthew-gallardo-portfolio`, project ID `prj_DLY6DLywgPvWXTMOmth92y3lGhCv`. Vercel assigned and verified `matthew-gallardo-portfolio.vercel.app`; Node.js is 24.x. The existing portfolio project and its domain have not been modified.
+Revision results will be added after its production deployment. Preview SEO scores reflect deliberate noindex. Lighthouse is a lab sample, not a guarantee; real-user INP and field Core Web Vitals require traffic.
 
 ## Reproduce
 
@@ -38,8 +47,9 @@ npm ci --strict-peer-deps
 npm run check
 npx playwright install --with-deps chromium firefox webkit
 npm run test:e2e
+npm audit --omit=dev
 ```
 
-Windows hosts without Firefox's native runtime can run `npm run test:e2e -- --project=chromium --project=webkit` while Linux CI runs all three engines. Do not interpret a browser launch failure as an application assertion passing.
+Windows hosts without Firefox's native runtime can run `npm run test:e2e -- --project=chromium --project=webkit` while Linux CI runs all three engines.
 
-Local screenshots, Lighthouse HTML/JSON, Playwright reports and traces are in ignored `artifacts/`, `playwright-report/` and `test-results/` folders. Test failures are uploaded by GitHub Actions; source evidence is in `docs/content-sources.md`.
+Local screenshots, Lighthouse HTML/JSON, Playwright reports and traces are in ignored `artifacts/`, `playwright-report/` and `test-results/`. Test failures are uploaded by GitHub Actions. Source evidence is in `docs/content-sources.md`.

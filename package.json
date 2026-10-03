@@ -14,8 +14,9 @@
     "build": "npm run validate:content && next build",
     "start": "next start",
     "test:e2e": "playwright test",
+    "test:unit": "node --experimental-strip-types --test tests/unit/*.test.ts",
     "test:e2e:all": "playwright test --project=chromium --project=firefox --project=webkit",
-    "check": "npm run typecheck && npm run lint && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run test:unit && npm run build"
   },
   "dependencies": {
     "lucide-react": "1.50.0",

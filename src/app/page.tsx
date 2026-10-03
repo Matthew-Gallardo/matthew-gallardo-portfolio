@@ -12,9 +12,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <SelectedProjects />
       <ExperienceSection />
       <StackSection />
+      <SelectedProjects />
       <CodingActivity />
       <EducationSection />
       <ContactSection />

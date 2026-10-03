@@ -17,6 +17,8 @@ The resume supports:
 
 Matthew confirmed Quezon City, email, GitHub, LinkedIn, title and the approved copy in the implementation request. The implementation's Next.js and TypeScript choices are not added to his professional skills.
 
+In the October 2026 revision Matthew explicitly confirmed **2 September 2024** as his career start date. The timer measures calendar time since that date in Manila, not cumulative labor hours. He chose a playful retirement message without a countdown; “Still in the backlog” does not assert a retirement age or date.
+
 The PDF still lists the existing portfolio URL. Keep it unchanged until Matthew supplies an updated document. The employment end date remains “Present” per the approved plan; review it when editing future content.
 
 ## Reference portfolio and visual direction
@@ -28,6 +30,8 @@ The PDF still lists the existing portfolio URL. Keep it unchanged until Matthew 
 Prior planning inspected desktop and mobile layouts, light/dark reference themes and mobile navigation. Adapted concepts: 224px desktop rail, narrow reading column, portrait/identity grouping, numbered sections, quiet dividers, generous spacing, restrained typography and mobile menu. This implementation uses original code, an original blue palette and readable project rows. It does not reuse the reference's code, images or interactive extras.
 
 ## Projects
+
+**Security Bank App — professional work:** Matthew requested this addition and supplied the [official app page](https://www.securitybank.com/apps/personal-banking/), which was reviewed on 3 October 2026. The page supports the public product identity and payment features. His role and contribution copy come from the resume: Payments & Transfers Squad, PESONet delivery, Prepaid Mobile Reload backend leadership and QRPH peer-to-peer rollout. No internal architecture, confidential source, performance figures, public repository or sole-ownership claim is included. The official page is a product reference, not a personal demo.
 
 | Published project                               | Source                                                                                                                                     | Evidence / publication boundary                                                                                                                                                                                                          |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -50,6 +54,8 @@ Public sources come from the existing portfolio's [Wakatime.js](https://github.c
 - [Language chart](https://wakatime.com/share/@MattG/013dd8d7-02cf-4cb1-ac50-8cd52de73048.svg)
 
 All three returned HTTP 200 during planning. The chart identifies its reporting period as all time. Values remain provider-supplied and are never hardcoded. Tracked editor activity is not a productivity measure or a full account of working hours. The JSON variant returned 404; the implementation does not use it. No private repository names, API keys or authenticated activity data are requested.
+
+Matthew confirmed his current work is tracked and requested removal of the original coverage disclaimer from the interface. The shared SVG still uses white labels; a tested `?theme=light` variant did not change them and the embed generator requires login. Light mode therefore adapts the original image using a CSS color filter on a light surface, while dark mode preserves the original. This is a portfolio presentation adaptation, not a verified native WakaTime light-theme endpoint. Both retain the provider's data and attribution.
 
 ## Pending assets
 

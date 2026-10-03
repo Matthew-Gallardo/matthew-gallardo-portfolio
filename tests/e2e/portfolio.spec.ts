@@ -9,6 +9,77 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
+test("experience leads the page and professional work leads the projects", async ({
+  page,
+}) => {
+  await page.goto("/");
+  expect(
+    await page
+      .locator("main .section")
+      .evaluateAll((sections) => sections.map((section) => section.id)),
+  ).toEqual([
+    "experience",
+    "stack",
+    "projects",
+    "activity",
+    "education",
+    "contact",
+  ]);
+  await expect(page.locator(".timeline-marker")).toHaveCount(2);
+  await expect(page.locator(".timeline-current")).toHaveCount(1);
+  await expect(page.locator("[data-project]").first()).toHaveAttribute(
+    "data-project",
+    "security-bank-app",
+  );
+  await expect(
+    page.getByText("Still in the backlog.", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText(/days to go|40-year career|2064/)).toHaveCount(0);
+});
+
+test("career timer uses the confirmed date and can pause and resume", async ({
+  page,
+}) => {
+  const now = new Date("2026-10-03T12:34:00+08:00");
+  await page.clock.install({ time: now });
+  await page.clock.pauseAt(now);
+  await page.goto("/");
+  await expect(page.locator('[data-unit="years"]')).toHaveText("02");
+  await expect(page.locator('[data-unit="months"]')).toHaveText("01");
+  await expect(page.locator('[data-unit="days"]')).toHaveText("01");
+  await expect(page.locator('[data-unit="hours"]')).toHaveText("12");
+  await expect(page.getByRole("timer")).toHaveAttribute("aria-live", "off");
+  await page.clock.runFor(2000);
+  await expect(page.locator('[data-unit="seconds"]')).toHaveText("02");
+  await page.getByRole("button", { name: "Pause career timer" }).click();
+  await page.clock.runFor(5000);
+  await expect(page.locator('[data-unit="seconds"]')).toHaveText("02");
+  await page.getByRole("button", { name: "Resume career timer" }).click();
+  await expect(page.locator('[data-unit="seconds"]')).toHaveText("07");
+});
+
+test("WakaTime canvas and presentation follow the active theme", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  await page.locator(".activity-disclosure summary").click();
+  await expect(page.locator(".activity-chart")).toHaveCSS(
+    "background-color",
+    "rgb(255, 255, 255)",
+  );
+  await expect(page.locator(".activity-chart img")).toHaveCSS(
+    "filter",
+    "invert(1) hue-rotate(180deg)",
+  );
+  await page.getByRole("switch", { name: "Dark mode" }).first().click();
+  await expect(page.locator(".activity-chart img")).toHaveCSS("filter", "none");
+  await expect(page.locator(".activity-chart")).toHaveCSS(
+    "background-color",
+    "rgb(21, 25, 34)",
+  );
+});
+
 test("all content, links, and resume are present without unsupported sections", async ({
   page,
   request,
@@ -39,7 +110,20 @@ test("all content, links, and resume are present without unsupported sections", 
     "Matthew-Gallardo-Resume-2026.pdf",
   );
   await page.getByRole("link", { name: "All projects", exact: true }).click();
-  await expect(page.locator("[data-project]")).toHaveCount(7);
+  await expect(page.locator("[data-project]")).toHaveCount(8);
+  await expect(
+    page.getByRole("link", {
+      name: "Visit Security Bank App official app page",
+    }),
+  ).toHaveAttribute(
+    "href",
+    "https://www.securitybank.com/apps/personal-banking/",
+  );
+  await expect(
+    page
+      .locator('[data-project="security-bank-app"]')
+      .getByRole("link", { name: /repository/ }),
+  ).toHaveCount(0);
   await expect(page.getByRole("link", { name: /repository$/ })).toHaveCount(7);
   await expect(page.getByRole("link", { name: /demo$/ })).toHaveCount(1);
   await expect(
@@ -70,18 +154,23 @@ test("system preference and explicit themes persist across reload and navigation
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
-  const theme = page.getByRole("combobox", { name: "Color theme" }).first();
+  const theme = page.getByRole("switch", { name: "Dark mode" }).first();
   await expect(page.locator("html")).toHaveClass(/dark/);
-  await theme.selectOption("light");
+  await expect(theme).toBeChecked();
+  await theme.click();
   await expect(page.locator("html")).toHaveClass(/light/);
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/light/);
   await page.getByRole("link", { name: "All projects", exact: true }).click();
-  await expect(theme).toHaveValue("light");
-  await theme.selectOption("dark");
+  await expect(theme).not.toBeChecked();
+  await theme.focus();
+  await page.keyboard.press("Space");
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/dark/);
-  await theme.selectOption("system");
+  await page
+    .getByRole("button", { name: "Auto (use system theme)" })
+    .first()
+    .click();
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveClass(/light/);
   await page.emulateMedia({ colorScheme: "dark" });
@@ -172,7 +261,7 @@ test("WakaTime disclosure loads attributed all-time data and handles failure", a
     page.getByText(
       "Reflects tracked editor activity and may not include all professional work.",
     ),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await page.route("https://wakatime.com/**/*.svg", (route) =>
     route.fulfill({ status: 404, body: "Unavailable" }),
   );
@@ -206,7 +295,7 @@ for (const width of [320, 375, 768, 1024, 1440]) {
           page.locator(".project-placeholder").first(),
         ).toBeVisible();
         await expect(page.locator(".project-placeholder")).toHaveCount(
-          path === "/" ? 3 : 7,
+          path === "/" ? 4 : 8,
         );
       }
     });
@@ -249,7 +338,7 @@ test("essential content and navigation work without JavaScript", async ({
     page.getByRole("button", { name: "Open navigation" }),
   ).not.toBeVisible();
   await page.getByRole("link", { name: "All projects", exact: true }).click();
-  await expect(page.locator("[data-project]")).toHaveCount(7);
+  await expect(page.locator("[data-project]")).toHaveCount(8);
   await context.close();
 });
 

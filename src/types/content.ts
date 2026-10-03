@@ -26,7 +26,9 @@ export type Project = Readonly<{
   category: string;
   summary: string;
   technologies: readonly string[];
-  repository: string;
+  kind: "professional" | "academic";
+  repository?: string;
+  website?: string;
   featuredOrder?: number;
   demo?: string;
   contribution?: string;
@@ -62,5 +64,4 @@ export type ActivityConfig = Readonly<{
   badgeUrl: string;
   chartUrl: string;
   period: string;
-  caption: string;
 }>;
