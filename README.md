@@ -115,6 +115,8 @@ The mobile menu uses a native modal dialog, contained Tab navigation, Escape dis
 
 The public repository is [Matthew-Gallardo/matthew-gallardo-portfolio](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio), with `main` as its production branch. The site is [matthew-gallardo.vercel.app](https://matthew-gallardo.vercel.app), attached to the existing Vercel project named `matthew-gallardo-portfolio`. The original `Matthew-Gallardo/Portfolio` repository and `gallardo-matthew.vercel.app` deployment are independent.
 
+The former address `matthew-gallardo-portfolio.vercel.app` permanently redirects with HTTP 308 to the current site, preserving paths and query strings. Section fragments are preserved by the browser.
+
 The existing project imports this repository with these settings. Use the same settings if recreating the deployment:
 
 - Framework: Next.js.

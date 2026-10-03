@@ -26,6 +26,14 @@ Type checking, linting, unit tests and production build passed. All 15 focused C
 - Every stop fits 320, 375, 768, 1024 and 1440px in both themes. Short screens, orientation changes and enlarged guide text remain usable. Active-guide Axe scans pass in both themes.
 - Local visual captures at 375px and 1440px in light/dark mode show no horizontal overflow or browser errors. Type checking, linting and production build pass.
 - The [protected tour preview](https://matthew-gallardo-portfolio-ei69zi5s2-matthewgallardos-projects.vercel.app), deployment `dpl_HKiyL9BnvoFiNh8uvzteZviWCE5B`, was reviewed through authenticated access at 375px and 1440px in both themes. All seven stops and Finish worked, with no overflow or console errors. Deployment protection remains enabled.
+- Release `d5597ce` passed [GitHub CI](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio/actions/runs/37158708139), including strict install, type checking, linting, unit checks, build and the complete Chromium/Firefox/WebKit suite. All 11 focused tour/navigation checks also passed against the public new origin.
+- Production visual captures at 375px and 1440px in both themes confirm all seven stops, reserved positions, readable panels and no overflow or console errors.
+
+## Address change
+
+On 4 October 2026, `matthew-gallardo.vercel.app` was verified and attached to the existing project. Release `d5597ce` deployed as `dpl_Ci6i3CDigs6R617FodY3k91GwH4Z`. Both routes, PDF resume, favicon, Open Graph image, sitemap and robots return HTTP 200 over HTTPS. Production canonicals, social images, sitemap and robots use the new origin.
+
+`matthew-gallardo-portfolio.vercel.app` has a permanent 308 project-domain redirect. HTTP checks preserve `/projects`, query strings and the resume path; a Chromium navigation confirms query strings and `#experience` survive together, with no invitation on direct section entry. The original `gallardo-matthew.vercel.app` still returns HTTP 200 and was not changed. Repository identity, deployment history and the supplied PDF remain intact.
 
 ## Dependency audit
 
@@ -57,6 +65,15 @@ Revised deployed production results at `89415f9`:
 | Projects | 93 | 100 | 100 | 100 | 2.2s | 0 | 290ms |
 
 Both pages meet the requested category-score targets. The projects lab run has 290ms total blocking time, which is a useful future optimization opportunity and is not a field INP measurement. Preview SEO scores reflect deliberate noindex. Lighthouse is a lab sample, not a guarantee; real-user INP and field Core Web Vitals require traffic.
+
+Tour release `d5597ce`, measured on 4 October 2026 at the new production origin:
+
+| Page | Performance | Accessibility | Best practices | SEO | LCP | CLS | TBT |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Home | 78 | 100 | 100 | 100 | 2.4s | 0 | 830ms |
+| Projects | 79 | 100 | 100 | 100 | 2.6s | 0 | 760ms |
+
+These current performance samples fall below the 90 target; the other category targets are met. Main-thread blocking is the main contributor. A same-host comparison of the previous `3c99834` homepage returned 71 performance and 1,800ms TBT through its protected deployment URL, so these samples do not establish a tour-specific regression. That comparison is not fully equivalent to the public origin, and its SEO result is affected by deployment protection. The earlier 93–95 scores are historical measurements, not the tour release's results. Further performance profiling remains an improvement opportunity; no scores are guaranteed.
 
 ## Reproduce
 
