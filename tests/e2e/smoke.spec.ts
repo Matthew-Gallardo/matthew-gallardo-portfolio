@@ -26,6 +26,10 @@ test("page renders without hydration errors and navigation works", async ({
   await expect(page.locator("html")).toHaveClass(/dark/);
   await page.getByRole("link", { name: "All projects", exact: true }).click();
   await expect(page.locator("[data-project]")).toHaveCount(8);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    /\/opengraph-image/,
+  );
   await page.setViewportSize({ width: 375, height: 812 });
   const trigger = page.getByRole("button", { name: "Open navigation" });
   await trigger.click();

@@ -22,8 +22,21 @@ export function pageMetadata(
       type: "website",
       locale: "en_PH",
       siteName: "Matthew Gallardo",
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: "Matthew Gallardo — Backend Software Engineer",
+        },
+      ],
     },
-    twitter: { card: "summary_large_image", title, description },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/opengraph-image"],
+    },
     robots: { index: indexable, follow: indexable },
   };
 }

@@ -27,18 +27,21 @@ The release audit reports **zero production dependency vulnerabilities** (`npm a
 - This Vercel preview was visually reviewed at 375px and 1440px in both themes, including the hero timer, navigation, timeline, project inventory and live activity chart. Both routes reported no console errors or overflow. Preview robots metadata remained noindex.
 - GitHub is connected to the new Vercel project, with `main` as production branch. Preview access protection remains enabled; authenticated CLI access is used for review.
 - The initial implementation's [CI run](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio/actions/runs/37075307258) passed all checks and 22 browser tests across Chromium, Firefox and WebKit. Revised CI results are recorded after publication.
+- The [revision CI run](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio/actions/runs/37095076032) for `89415f9` passed strict installation, all quality checks and the 25-test suite across Chromium, Firefox and WebKit. All 22 detailed Chromium checks also passed against the public production URL.
+- Production deployment `dpl_hWGWFQAvHs65XTjmEc484YhWhvE5` reached READY via the GitHub push and serves the requested revisions. Post-deployment review caught and corrected the projects route's missing Open Graph image; focused Chromium/WebKit smoke checks passed after that correction.
+- Both routes, robots, sitemap, favicon, Open Graph image and resume returned HTTP 200 with correct production canonicals, indexing policy and PDF attachment disposition. All seven source repositories, SackCal's demo and the old portfolio returned HTTP 200. Security Bank's official page was accessible through the research browser, while a generic Node HTTP link check returned 403; retain the verified official link rather than interpreting its automated-request restriction as a missing page.
 - The existing `Portfolio` repository and `gallardo-matthew.vercel.app` deployment remain independent and untouched.
 
 ## Lighthouse mobile measurements
 
-Initial deployed production results, before the requested UI revisions:
+Revised deployed production results at `89415f9`:
 
 | Page | Performance | Accessibility | Best practices | SEO | LCP | CLS | TBT |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Home | 98 | 100 | 100 | 100 | 2.1s | 0 | 130ms |
-| Projects | 99 | 100 | 100 | 100 | 2.0s | 0 | 100ms |
+| Home | 95 | 100 | 100 | 100 | 2.2s | 0 | 180ms |
+| Projects | 93 | 100 | 100 | 100 | 2.2s | 0 | 290ms |
 
-Revision results will be added after its production deployment. Preview SEO scores reflect deliberate noindex. Lighthouse is a lab sample, not a guarantee; real-user INP and field Core Web Vitals require traffic.
+Both pages meet the requested category-score targets. The projects lab run has 290ms total blocking time, which is a useful future optimization opportunity and is not a field INP measurement. Preview SEO scores reflect deliberate noindex. Lighthouse is a lab sample, not a guarantee; real-user INP and field Core Web Vitals require traffic.
 
 ## Reproduce
 
