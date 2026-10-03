@@ -42,7 +42,6 @@ export function Hero() {
       <div className="hero-copy">
         <p className="hero-headline">{profile.headline}</p>
         <p className="hero-description">{profile.introduction}</p>
-        <CareerClock />
         <div className="hero-actions">
           <Link href="/#projects" className="button button-primary">
             View projects
@@ -71,6 +70,7 @@ export function Hero() {
             <ArrowUpRight size={14} aria-hidden="true" />
           </Link>
         </div>
+        <CareerClock />
       </div>
       <div className="hero-footnote">
         <span>JAVA / SPRING BOOT / DIGITAL PAYMENTS</span>

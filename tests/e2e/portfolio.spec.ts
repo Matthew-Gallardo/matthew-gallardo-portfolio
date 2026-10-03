@@ -44,9 +44,12 @@ test("career timer uses the confirmed date and can pause and resume", async ({
   await page.clock.install({ time: now });
   await page.clock.pauseAt(now);
   await page.goto("/");
-  await expect(page.locator('[data-unit="years"]')).toHaveText("02");
-  await expect(page.locator('[data-unit="months"]')).toHaveText("01");
-  await expect(page.locator('[data-unit="days"]')).toHaveText("01");
+  await expect(page.locator('[data-unit="years"]')).toHaveText("2");
+  await expect(page.locator('[data-unit="months"]')).toHaveText("1");
+  await expect(page.locator('[data-unit="days"]')).toHaveText("1");
+  await expect(page.locator(".career-clock")).not.toContainText(
+    /September|2024|Since/,
+  );
   await expect(page.locator('[data-unit="hours"]')).toHaveText("12");
   await expect(page.getByRole("timer")).toHaveAttribute("aria-live", "off");
   await page.clock.runFor(2000);

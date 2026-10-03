@@ -12,6 +12,12 @@ Validation date: 3 October 2026 (Asia/Manila). Matthew's supplied portrait remai
 - Desktop/mobile visual captures at 1440/375px in both themes recorded no console errors. The live WakaTime badge and chart loaded, with dark labels on the light chart canvas and original labels in dark mode. Provider values are never copied into source.
 - Firefox cannot launch on this Windows host because its side-by-side native runtime is missing. Linux CI includes Firefox; this host limitation is not treated as a passed test.
 
+## Career strip visual refinement
+
+The subsequent screenshot-driven revision replaces the rounded timer card with a flat three-column strip, thin separators, monospace figures and uppercase labels. The visible starting date was removed; the confirmed date still drives the elapsed-time calculation. The strip follows the primary actions and social links, and places retirement beneath the timer columns on narrow screens.
+
+Type checking, linting, unit tests and production build passed. All 15 focused Chromium/WebKit checks passed for timer controls, five responsive widths in both themes, accessibility and navigation. Visual captures at 320, 375, 768, 1024 and 1440px in both themes showed no overflow, displayed starting date or page errors. Reference logos and achievements were not reproduced.
+
 ## Dependency audit
 
 Strict peer-dependency installation succeeds with the committed npm lockfile. ESLint 9 is retained because Next's current lint tooling does not support ESLint 10's peer range.

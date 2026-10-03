@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { BriefcaseBusiness, Coffee, Pause, Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { career } from "@/content/career";
 import { careerDuration } from "@/lib/career-time";
 
@@ -38,14 +38,12 @@ function subscribe(listener: () => void) {
 const getSnapshot = () => currentTime;
 const getServerSnapshot = () => null;
 const start = Date.parse(career.start);
-const units = [
-  "years",
-  "months",
-  "days",
-  "hours",
-  "minutes",
-  "seconds",
+const calendarUnits = [
+  { name: "years", suffix: "y" },
+  { name: "months", suffix: "m" },
+  { name: "days", suffix: "d" },
 ] as const;
+const clockUnits = ["hours", "minutes", "seconds"] as const;
 
 export function CareerClock() {
   const liveTime = useSyncExternalStore(
@@ -57,57 +55,62 @@ export function CareerClock() {
   const now = pausedAt ?? liveTime;
   const duration = now === null ? null : careerDuration(start, now);
   return (
-    <div
-      className="career-clock"
-      role="group"
-      aria-labelledby="career-clock-title"
-    >
-      <div className="career-clock-header">
-        <span id="career-clock-title">
-          <BriefcaseBusiness size={15} aria-hidden="true" />
-          Working for
-        </span>
-        <button
-          type="button"
-          className="career-pause js-required"
-          disabled={liveTime === null}
-          onClick={() => setPausedAt(pausedAt === null ? Date.now() : null)}
-          aria-label={
-            pausedAt === null ? "Pause career timer" : "Resume career timer"
-          }
-        >
-          {pausedAt === null ? (
-            <Pause size={12} aria-hidden="true" />
-          ) : (
-            <Play size={12} aria-hidden="true" />
-          )}
-          {pausedAt === null ? "Pause" : "Resume"}
-        </button>
-      </div>
+    <div className="career-clock" role="group" aria-label="Career activity">
       <div
-        className="career-digits"
+        className="career-timer"
         role="timer"
         aria-label="Elapsed career time"
         aria-live="off"
       >
-        {units.map((unit) => (
-          <div key={unit}>
-            <span className="career-value" data-unit={unit}>
-              {duration ? String(duration[unit]).padStart(2, "0") : "—"}
-            </span>
-            <span className="career-unit">{unit}</span>
+        <div className="career-stat">
+          <div className="career-value career-calendar">
+            {calendarUnits.map(({ name, suffix }) => (
+              <span key={name}>
+                <span data-unit={name}>{duration ? duration[name] : "—"}</span>
+                <span aria-hidden="true">{suffix}</span>
+                <span className="sr-only"> {name} </span>
+              </span>
+            ))}
           </div>
-        ))}
+          <span className="career-label">Working for</span>
+        </div>
+        <div className="career-stat">
+          <div className="career-value career-time">
+            {clockUnits.map((unit, index) => (
+              <span key={unit}>
+                {index > 0 && <span aria-hidden="true">:</span>}
+                <span data-unit={unit}>
+                  {duration ? String(duration[unit]).padStart(2, "0") : "—"}
+                </span>
+                <span className="sr-only"> {unit} </span>
+              </span>
+            ))}
+          </div>
+          <div className="career-label-row">
+            <span className="career-label">
+              {pausedAt === null ? "And counting" : "On pause"}
+            </span>
+            <button
+              type="button"
+              className="career-pause js-required"
+              disabled={liveTime === null}
+              onClick={() => setPausedAt(pausedAt === null ? Date.now() : null)}
+              aria-label={
+                pausedAt === null ? "Pause career timer" : "Resume career timer"
+              }
+            >
+              {pausedAt === null ? (
+                <Pause size={12} aria-hidden="true" />
+              ) : (
+                <Play size={12} aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
       </div>
-      <p className="career-since">
-        Since <time dateTime="2024-09-02">{career.startLabel}</time>
-        <span aria-hidden="true"> · </span>Still compiling.
-      </p>
-      <div className="career-retirement">
-        <Coffee size={15} aria-hidden="true" />
-        <p>
-          Retirement? <span>{career.retirementMessage}</span>
-        </p>
+      <div className="career-stat career-retirement">
+        <p className="career-value">{career.retirementMessage}</p>
+        <span className="career-label">Retirement</span>
       </div>
     </div>
   );

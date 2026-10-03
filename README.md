@@ -68,7 +68,7 @@ The home page orders Experience, Stack, Projects, Activity, Education and Contac
 
 ## Career timer
 
-`src/content/career.ts` contains Matthew's confirmed start date, 2 September 2024, interpreted as midnight in Manila, and the playful retirement message. The timer reports elapsed calendar time since that date, not hours worked. Years and months respect calendar anniversaries; a visitor can pause updates, and hidden tabs stop ticking. It reserves space before hydration and does not announce every second to screen readers. Retirement has no estimated date or countdown.
+`src/content/career.ts` contains Matthew's confirmed start date, 2 September 2024, interpreted as midnight in Manila, and the playful retirement message. The date is used only for calculation and is not displayed in the hero. A flat stats strip presents calendar duration, a live clock and the retirement line, with thin dividers and uppercase labels. On phones the retirement line moves below the two timer columns. The timer reports elapsed calendar time since that date, not hours worked. Years and months respect calendar anniversaries; a visitor can pause updates, and hidden tabs stop ticking. It reserves space before hydration and does not announce every second to screen readers. Retirement has no estimated date or countdown.
 
 ## Replace the portrait or project images
 

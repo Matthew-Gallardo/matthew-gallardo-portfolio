@@ -19,6 +19,8 @@ Matthew confirmed Quezon City, email, GitHub, LinkedIn, title and the approved c
 
 In the October 2026 revision Matthew explicitly confirmed **2 September 2024** as his career start date. The timer measures calendar time since that date in Manila, not cumulative labor hours. He chose a playful retirement message without a countdown; “Still in the backlog” does not assert a retirement age or date.
 
+Matthew subsequently supplied a screenshot as a visual reference for the career stats: flat presentation, thin dividers, monospace figures and uppercase labels. These layout characteristics are adapted in original CSS. The screenshot's organizations, logos and numerical achievements are not copied. At his request the start date is no longer displayed in the hero; it remains the calculation input.
+
 The PDF still lists the existing portfolio URL. Keep it unchanged until Matthew supplies an updated document. The employment end date remains “Present” per the approved plan; review it when editing future content.
 
 ## Reference portfolio and visual direction
