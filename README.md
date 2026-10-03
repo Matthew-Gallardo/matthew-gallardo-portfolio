@@ -35,7 +35,7 @@ To test an already-running local or accessible preview server, set the optional 
 ## Stack and structure
 
 - Next.js App Router, React, strict TypeScript, Tailwind CSS, semantic CSS custom properties.
-- Static Server Components for content; small client components for themes, navigation, the career timer, clipboard, media errors and selected Motion entrances.
+- Static Server Components for content; small client components for themes, navigation, the career timer, clipboard, media errors, the optional tour and selected Motion entrances.
 - Geist Sans/Mono with `next/font`; raster assets through `next/image`; Lucide UI icons.
 - Local typed content, no CMS, database, authentication, contact backend, analytics, or required paid services.
 
@@ -45,6 +45,7 @@ src/components/layout/    Desktop rail, mobile dialog and footer
 src/components/sections/  Homepage content
 src/components/projects/  Project presentation
 src/components/ui/        Theme, media, clipboard and animation
+src/components/tour/      Invitation and dynamically loaded Matt guide
 src/content/              Editable profile, projects, experience, skills, education, activity, career
 src/types/content.ts      Readonly content contracts
 src/lib/                  Metadata and safe local image lookup
@@ -69,6 +70,14 @@ The home page orders Experience, Stack, Projects, Activity, Education and Contac
 ## Career timer
 
 `src/content/career.ts` contains Matthew's confirmed start date, 2 September 2024, interpreted as midnight in Manila, and the playful retirement message. The date is used only for calculation and is not displayed in the hero. A flat stats strip presents calendar duration, a live clock and the retirement line, with thin dividers and uppercase labels. On phones the retirement line moves below the two timer columns. The timer reports elapsed calendar time since that date, not hours worked. Years and months respect calendar anniversaries; a visitor can pause updates, and hidden tabs stop ticking. It reserves space before hydration and does not announce every second to screen readers. Retirement has no estimated date or countdown.
+
+## Matt guided tour
+
+The homepage offers an optional “Take a tour with Matt” invitation. Nothing scrolls until the visitor starts it. A decorative Matt pointer introduces seven stops, with eight seconds of reading time after movement settles. Pause/Resume, Back, Next, Skip and Finish remain available; the final stop waits for Finish. The footer always offers replay on the homepage.
+
+Edit the typed steps in `src/content/tour.ts`, keeping targets aligned with real heading IDs. The controller loads only when requested. Dismissal/completion is stored under `mg-portfolio-tour-v1`; blocked storage falls back to session memory. Direct section links suppress the invitation, and `/projects` has no tour.
+
+Manual scrolling or interaction pauses progression, hidden tabs pause until explicitly resumed, and page links or mobile navigation end the tour. Escape dismisses it and restores focus. Reduced motion removes travel and defaults to manual Next steps. Short screens use the same compact bottom panel as phones. No content or essential action depends on the guide or JavaScript.
 
 ## Replace the portrait or project images
 
@@ -104,9 +113,9 @@ The mobile menu uses a native modal dialog, contained Tab navigation, Escape dis
 
 ## Repository and Vercel deployment
 
-The public repository is [Matthew-Gallardo/matthew-gallardo-portfolio](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio), with `main` as its production branch. The site is [matthew-gallardo-portfolio.vercel.app](https://matthew-gallardo-portfolio.vercel.app). The original `Matthew-Gallardo/Portfolio` repository and its deployment are independent.
+The public repository is [Matthew-Gallardo/matthew-gallardo-portfolio](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio), with `main` as its production branch. The site is [matthew-gallardo.vercel.app](https://matthew-gallardo.vercel.app), attached to the existing Vercel project named `matthew-gallardo-portfolio`. The original `Matthew-Gallardo/Portfolio` repository and `gallardo-matthew.vercel.app` deployment are independent.
 
-In Vercel, import this repository into a **new** project:
+The existing project imports this repository with these settings. Use the same settings if recreating the deployment:
 
 - Framework: Next.js.
 - Root directory: repository root.
@@ -125,13 +134,13 @@ npx vercel link
 npx vercel deploy
 ```
 
-Link explicitly to the new project. The default deploy creates a preview. Inspect that preview before promoting a deployment to the new project's production URL. Do not reassign or replace `gallardo-matthew.vercel.app` as part of this release.
+Link explicitly to `matthew-gallardo-portfolio`. The default deploy creates a preview. Inspect that preview before promoting a deployment to the project's production URL. Do not reassign or replace `gallardo-matthew.vercel.app`.
 
 ## Metadata and domain changes
 
 Set `productionOrigin` in `src/content/site.ts` to the new verified HTTPS production origin when assigned. Until configured, metadata remains non-indexable and the sitemap is empty. Preview deployments retain `noindex`; only Vercel production builds with a configured origin enable indexing.
 
-For a future domain change, connect and verify the domain in Vercel, update that single origin setting, rebuild and redeploy. Check both canonical URLs, the Open Graph image URL, sitemap and robots. Update the resume separately if Matthew supplies a revised PDF. Never put a Windows path into a website URL.
+For a future domain change, connect and verify the domain in Vercel, update that single origin setting, rebuild and redeploy. Check both canonical URLs, the Open Graph image URL, sitemap and robots. Only after the new origin works, configure a permanent 308 project-domain redirect from the previous address and test paths, query strings and section fragments in a browser. The compatibility address for this release is `matthew-gallardo-portfolio.vercel.app`. Browser theme and tour storage is origin-specific, so the first visit on a new origin follows system preference. Update the resume separately if Matthew supplies a revised PDF. Never put a Windows path into a website URL.
 
 ## Release and rollback
 

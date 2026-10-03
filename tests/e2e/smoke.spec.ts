@@ -20,6 +20,18 @@ test("page renders without hydration errors and navigation works", async ({
   );
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.getByRole("button", { name: "Take a tour with Matt" }).click();
+  await expect(page.locator(".tour-bubble")).toHaveAttribute(
+    "data-tour-ready",
+    "true",
+  );
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.locator(".tour-bubble")).toHaveAttribute(
+    "data-tour-step",
+    "experience",
+  );
+  await page.getByRole("button", { name: "Skip tour" }).click();
+  await expect(page.locator(".tour-bubble")).toHaveCount(0);
   await page.emulateMedia({ colorScheme: "light" });
   await page.getByRole("switch", { name: "Dark mode" }).first().click();
   await page.reload();

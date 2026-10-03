@@ -56,6 +56,7 @@ export function MobileNavigation() {
         aria-label="Open navigation"
         aria-haspopup="dialog"
         aria-controls="mobile-menu"
+        data-tour-cancel="true"
       >
         <Menu size={22} />
       </button>

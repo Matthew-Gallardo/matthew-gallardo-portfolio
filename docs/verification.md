@@ -1,6 +1,6 @@
 # Verification record
 
-Validation date: 3 October 2026 (Asia/Manila). Matthew's supplied portrait remains pending; MG is the approved fallback.
+Validation dates: 3–4 October 2026 (Asia/Manila). Matthew's supplied portrait remains pending; MG is the approved fallback.
 
 ## Revision checks
 
@@ -18,6 +18,15 @@ The subsequent screenshot-driven revision replaces the rounded timer card with a
 
 Type checking, linting, unit tests and production build passed. All 15 focused Chromium/WebKit checks passed for timer controls, five responsive widths in both themes, accessibility and navigation. Visual captures at 320, 375, 768, 1024 and 1440px in both themes showed no overflow, displayed starting date or page errors. Reference logos and achievements were not reproduced.
 
+## Matt guided tour
+
+- The opt-in homepage tour contains seven typed steps. The controller is dynamically loaded after starting; no packages or services were added.
+- All 33 local Chromium/WebKit tests passed across the full regression run and a focused timing-test rerun. The initial timing assertion was corrected to advance the mocked clock after React commits the next step; the application timer itself did not require a correction.
+- Coverage includes invitation/dismissal persistence, footer replay, direct hash entry, automatic timing after movement, pause/resume, Back/Next/Skip/Finish, focus restoration, manual scrolling, hidden tabs, navigation cleanup, reduced motion, unavailable storage and missing targets.
+- Every stop fits 320, 375, 768, 1024 and 1440px in both themes. Short screens, orientation changes and enlarged guide text remain usable. Active-guide Axe scans pass in both themes.
+- Local visual captures at 375px and 1440px in light/dark mode show no horizontal overflow or browser errors. Type checking, linting and production build pass.
+- The [protected tour preview](https://matthew-gallardo-portfolio-ei69zi5s2-matthewgallardos-projects.vercel.app), deployment `dpl_HKiyL9BnvoFiNh8uvzteZviWCE5B`, was reviewed through authenticated access at 375px and 1440px in both themes. All seven stops and Finish worked, with no overflow or console errors. Deployment protection remains enabled.
+
 ## Dependency audit
 
 Strict peer-dependency installation succeeds with the committed npm lockfile. ESLint 9 is retained because Next's current lint tooling does not support ESLint 10's peer range.
@@ -28,7 +37,7 @@ The release audit reports **zero production dependency vulnerabilities** (`npm a
 
 - Public repository: [Matthew-Gallardo/matthew-gallardo-portfolio](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio).
 - New Vercel project: `matthew-gallardo-portfolio`, ID `prj_DLY6DLywgPvWXTMOmth92y3lGhCv`, Node.js 24.x.
-- Production: [matthew-gallardo-portfolio.vercel.app](https://matthew-gallardo-portfolio.vercel.app).
+- Production: [matthew-gallardo.vercel.app](https://matthew-gallardo.vercel.app), assigned to the existing project on 4 October 2026. Domain assignment is verified and HTTPS serves the correct portfolio.
 - Revision preview: [protected Vercel preview](https://matthew-gallardo-portfolio-etvpa44t1-matthewgallardos-projects.vercel.app), deployment `dpl_Bsn55vXimVk5Fh6tj7RNJ1vVpJYR`, READY.
 - This Vercel preview was visually reviewed at 375px and 1440px in both themes, including the hero timer, navigation, timeline, project inventory and live activity chart. Both routes reported no console errors or overflow. Preview robots metadata remained noindex.
 - GitHub is connected to the new Vercel project, with `main` as production branch. Preview access protection remains enabled; authenticated CLI access is used for review.

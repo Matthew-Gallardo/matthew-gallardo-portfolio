@@ -4,6 +4,7 @@ import { navigation } from "@/content/site";
 import { profile } from "@/content/profile";
 import { ThemeControl } from "@/components/ui/theme";
 import { MobileNavigation } from "./mobile-navigation";
+import { HomeTour } from "@/components/tour/home-tour";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
@@ -109,6 +110,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <p>© {new Date().getFullYear()} Matthew Gallardo</p>
           </div>
           <div className="footer-links">
+            <HomeTour />
             <a href={profile.github}>GitHub</a>
             <a href={profile.linkedin}>LinkedIn</a>
             <a href={`mailto:${profile.email}`}>Email</a>

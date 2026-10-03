@@ -1,7 +1,6 @@
 // Assigned and verified by the new Vercel project; update here for future domains.
 export const site = {
-  productionOrigin: "https://matthew-gallardo-portfolio.vercel.app" as
-    string | null,
+  productionOrigin: "https://matthew-gallardo.vercel.app" as string | null,
   title: "Matthew Gallardo | Backend Software Engineer",
   description:
     "Backend software engineer working in banking and digital payments with Java, Spring Boot, and event-driven microservices, with a background in full-stack development and machine learning.",

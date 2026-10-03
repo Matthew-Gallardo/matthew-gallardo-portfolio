@@ -1413,6 +1413,220 @@ section {
     gap: 8px;
   }
 }
+.footer-tour {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: inherit;
+}
+.footer-tour:hover {
+  color: var(--accent);
+}
+.tour-invitation {
+  position: fixed;
+  z-index: 30;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  max-width: calc(100vw - 32px);
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  background: var(--background);
+  box-shadow: 0 4px 18px #0000000d;
+  font-family: var(--font-geist-mono), monospace;
+  color: var(--muted);
+}
+.tour-invitation button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px 0 16px;
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  color: inherit;
+  font-size: 11px;
+}
+.tour-invitation button:hover {
+  color: var(--accent);
+}
+.tour-invitation .tour-dismiss {
+  width: 44px;
+  padding: 0;
+  flex-shrink: 0;
+}
+.tour-invitation-error {
+  position: absolute;
+  bottom: 54px;
+  right: 0;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.tour-load-error {
+  font-size: 12px;
+  color: var(--muted);
+}
+.tour-pointer {
+  position: fixed;
+  z-index: 41;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  color: var(--accent);
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px #0003);
+}
+.tour-pointer span {
+  margin-top: 22px;
+  margin-left: -4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 500;
+}
+.tour-bubble {
+  position: fixed;
+  z-index: 40;
+  width: 336px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 112px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px;
+  border: 1px solid #c9cfdb;
+  border-radius: 16px;
+  background: #f8f9fc;
+  color: #172033;
+  box-shadow:
+    0 12px 40px #00000026,
+    0 2px 8px #00000012;
+  transition: opacity 140ms ease;
+}
+.tour-bubble[aria-busy="true"] {
+  opacity: 0.8;
+}
+.tour-bubble:focus-visible {
+  outline-color: #1d4ed8;
+}
+.tour-bubble-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.tour-bubble h2 {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.tour-bubble h2 span {
+  margin-left: 5px;
+  color: #586174;
+  font-size: 11px;
+  font-weight: 400;
+}
+.tour-step-name {
+  font-family: var(--font-geist-mono), monospace;
+  color: #586174;
+  font-size: 10px;
+  line-height: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tour-message {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 22px;
+}
+.tour-progress {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #586174;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  line-height: 18px;
+}
+.tour-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.tour-bubble button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  border-radius: 7px;
+  border: 1px solid #727e91;
+  padding: 0 10px;
+  color: #172033;
+  background: transparent;
+  font-size: 12px;
+}
+.tour-bubble button:focus-visible {
+  outline-color: #1d4ed8;
+}
+.tour-bubble button:hover:not(:disabled) {
+  background: #eaf0ff;
+}
+.tour-bubble button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.tour-buttons .tour-next {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+  margin-left: auto;
+}
+.tour-buttons .tour-next:hover:not(:disabled) {
+  background: #1e40af;
+}
+.tour-bubble .tour-close {
+  width: 44px;
+  min-width: 44px;
+  border: 0;
+  margin: -8px -8px 0 0;
+  padding: 0;
+}
+[data-tour-active="true"] {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+}
+@media (max-width: 767px) {
+  .tour-invitation {
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+@media (max-width: 767px), (max-height: 599px) {
+  .tour-bubble {
+    width: min(440px, calc(100vw - 32px));
+    max-height: 50dvh;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

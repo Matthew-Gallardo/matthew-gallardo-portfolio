@@ -1,6 +1,7 @@
 # Assets and attribution
 
 - Application source, semantic color palette, MG initials mark, Open Graph card and placeholder compositions were created for this portfolio. No source code was copied from Bryl Lim or the previous portfolio/template.
+- The optional Matt guide takes visual direction from Matthew's supplied screenshots of Bryl Lim's pointer, speech bubble and replay pill. Its code, step copy and accessible controls are original; reference imagery, names, chat features and affiliations are not bundled.
 - The existing portfolio credits Soumyajit's template. Its code, background illustrations, particles, preloader and screenshots are not included in this repository.
 - Geist Sans and Geist Mono are served locally by `next/font` after a build-time download from Google Fonts. Geist is distributed under the SIL Open Font License; upstream notices: [vercel/geist-font](https://github.com/vercel/geist-font/blob/main/OFL.txt).
 - Lucide interface icons use the [ISC license](https://github.com/lucide-icons/lucide/blob/main/LICENSE). No technology brand logos are included.
