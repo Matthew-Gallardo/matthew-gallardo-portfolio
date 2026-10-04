@@ -1477,31 +1477,27 @@ section {
   font-size: 12px;
   color: var(--muted);
 }
-.tour-pointer {
+.tour-guide {
   position: fixed;
   z-index: 41;
   left: 0;
   top: 0;
-  display: flex;
-  align-items: flex-start;
-  color: var(--accent);
+  width: 0;
+  height: 0;
   pointer-events: none;
+}
+.tour-pointer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
   filter: drop-shadow(0 1px 2px #0003);
 }
-.tour-pointer span {
-  margin-top: 22px;
-  margin-left: -4px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: var(--accent);
-  color: var(--accent-foreground);
-  font-size: 11px;
-  line-height: 18px;
-  font-weight: 500;
-}
 .tour-bubble {
-  position: fixed;
-  z-index: 40;
+  position: absolute;
+  pointer-events: auto;
   width: max-content;
   min-width: 56px;
   max-width: min(320px, calc(100vw - 32px));
@@ -1553,6 +1549,7 @@ section {
 }
 .tour-progress {
   position: fixed;
+  z-index: 42;
   right: 16px;
   bottom: max(16px, env(safe-area-inset-bottom));
   padding: 0 4px 0 14px;
@@ -1569,7 +1566,7 @@ section {
   font-size: 10px;
   line-height: 18px;
 }
-.tour-bubble button {
+.tour-progress button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1582,19 +1579,19 @@ section {
   background: transparent;
   font-size: 12px;
 }
-.tour-bubble button:focus-visible {
+.tour-progress button:focus-visible {
   outline-color: #1d4ed8;
 }
-.tour-bubble button:hover:not(:disabled) {
+.tour-progress button:hover:not(:disabled) {
   background: #eaf0ff;
 }
-.tour-bubble .tour-playback {
+.tour-progress .tour-playback {
   border: 0;
   color: #586174;
   font-family: inherit;
   font-size: 11px;
 }
-.tour-bubble .tour-close {
+.tour-progress .tour-close {
   width: 44px;
   min-width: 44px;
   border: 0;
@@ -1612,12 +1609,6 @@ section {
     bottom: max(16px, env(safe-area-inset-bottom));
   }
 }
-@media (max-width: 767px), (max-height: 599px) {
-  .tour-bubble {
-    max-height: min(50dvh, calc(100dvh - 176px));
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

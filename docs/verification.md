@@ -49,6 +49,12 @@ Type checking, linting, unit checks, content validation, production build and al
 
 The [protected bubble preview](https://matthew-gallardo-portfolio-mr2klwrni-matthewgallardos-projects.vercel.app), deployment `dpl_543vdCMKVivQzMWjDFELepx65uit`, was visually checked at 375px and 1440px in both themes. Its full seven-stop sequence completed automatically in real time on mobile, with no browser errors or overflow. Additional responsive assertions verify that the separate controls stay on-screen and below the speech bubble.
 
+## Bubble attached to Matt's pointer
+
+The arrow and speech bubble now share one animated position beside the active section heading on every screen size. This replaces the previous independent desktop position and mobile bottom placement. The message still fits the typed text; only playback controls stay in the bottom pill. The duplicate Matt badge on the pointer was removed because the adjacent bubble already names the guide. Viewport bounds can flip the bubble above the pointer or limit its height while keeping the pair together.
+
+The [protected attached-bubble preview](https://matthew-gallardo-portfolio-iwx28p582-matthewgallardos-projects.vercel.app), deployment `dpl_2qy5m9YiPG6zn1rCcp9BkdR1PWGn`, was visually reviewed at 375px and 1440px in both themes. The full seven-stop mobile sequence completed in real time without overflow or browser errors. Browser assertions check adjacency during animated travel and at every stop across all five widths. Type checking, linting, unit checks and production build passed. The 36 local browser cases passed across the main run and a focused rerun after fixing a test-clock setup race before page loading.
+
 ## Address change
 
 On 4 October 2026, `matthew-gallardo.vercel.app` was verified and attached to the existing project. Release `d5597ce` deployed as `dpl_Ci6i3CDigs6R617FodY3k91GwH4Z`. Both routes, PDF resume, favicon, Open Graph image, sitemap and robots return HTTP 200 over HTTPS. Production canonicals, social images, sitemap and robots use the new origin.

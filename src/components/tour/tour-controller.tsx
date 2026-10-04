@@ -14,6 +14,7 @@ type Position = {
   y: number;
   bubbleX: number;
   bubbleY: number;
+  maxHeight: number;
   visible: boolean;
 };
 const clamp = (value: number, minimum: number, maximum: number) =>
@@ -33,7 +34,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
   const current = tourSteps[step.index];
 
   useEffect(() => {
-    if (position && !focused.current) {
+    if (position?.visible && !focused.current) {
       focused.current = true;
       panel.current?.focus({ preventScroll: true });
     }
@@ -66,29 +67,24 @@ export default function TourController({ onEnd }: TourControllerProps) {
       const rect = target.getBoundingClientRect();
       const width = window.visualViewport?.width ?? innerWidth;
       const height = window.visualViewport?.height ?? innerHeight;
-      const mobile = width < 768 || height < 600;
-      const bubbleHeight = bubble.offsetHeight;
+      const minimumTop = width < 1024 ? 80 : 16;
+      const bubbleHeight = bubble.scrollHeight + 2;
       const bubbleWidth = bubble.offsetWidth;
       const controlsTop = controls.current?.getBoundingClientRect().top ?? height - 72;
-      const below = rect.bottom + 36;
+      const x = clamp(rect.left - 20, 8, width - 32);
+      const y = clamp(rect.bottom - 12, minimumTop, controlsTop - 36);
+      const below = Math.max(0, controlsTop - 12 - (y + 26));
+      const above = Math.max(0, y - 12 - minimumTop);
+      const placeAbove = bubbleHeight > below && above > below;
+      const maxHeight = Math.max(40, placeAbove ? above : below);
       const next = {
-        x: clamp(rect.left - 23, 8, width - 76),
-        y: clamp(rect.top + 4, 8, height - 50),
-        bubbleX: mobile
-          ? 16
-          : clamp(rect.left + 24, 16, width - bubbleWidth - 16),
-        bubbleY: mobile
-          ? Math.max(80, controlsTop - bubbleHeight - 12)
-          : clamp(
-              below + bubbleHeight <= height - 16
-                ? below
-                : rect.top - bubbleHeight - 28,
-              16,
-              height - bubbleHeight - 16,
-            ),
-        visible:
-          rect.bottom > 64 &&
-          rect.top < (mobile ? controlsTop - bubbleHeight - 24 : height),
+        x,
+        y,
+        // Both offsets belong to the same animated origin as the arrow.
+        bubbleX: clamp(x + 20, 16, width - bubbleWidth - 16) - x,
+        bubbleY: placeAbove ? -Math.min(bubbleHeight, maxHeight) - 12 : 26,
+        maxHeight,
+        visible: rect.bottom > minimumTop && rect.bottom < controlsTop - 24,
       };
       setPosition((previous) =>
         previous &&
@@ -273,8 +269,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
   return createPortal(
     <>
       <motion.div
-        className="tour-pointer"
-        aria-hidden="true"
+        className="tour-guide"
         initial={false}
         animate={{
           x: position?.x ?? 0,
@@ -282,63 +277,65 @@ export default function TourController({ onEnd }: TourControllerProps) {
           opacity: position?.visible ? 1 : 0,
         }}
         transition={{ duration: reduced ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{ visibility: position?.visible ? "visible" : "hidden" }}
       >
-        <MousePointer2 size={24} fill="currentColor" strokeWidth={1.5} />
-        <span>Matt</span>
-      </motion.div>
-      <div
-        ref={panel}
-        className="tour-bubble"
-        role="dialog"
-        aria-modal="false"
-        aria-labelledby="matt-tour-title"
-        aria-describedby="matt-tour-description"
-        aria-busy={!step.ready}
-        tabIndex={-1}
-        data-tour-ui="true"
-        data-tour-step={current.id}
-        data-tour-ready={step.ready}
-        style={{
-          left: position?.bubbleX ?? 16,
-          top: position?.bubbleY ?? 100,
-          visibility: position ? "visible" : "hidden",
-        }}
-      >
-        <h2 id="matt-tour-title">Matt<span className="sr-only"> — {current.title}</span></h2>
-        <TourMessage
-          key={current.id}
-          text={current.explanation}
-          ready={step.ready}
-          paused={paused}
-          reduced={reduced}
-          onComplete={advance}
-        />
-        <div ref={controls} className="tour-progress" role="group" aria-label="Tour controls">
-          <span>
-            {step.index + 1} of {tourSteps.length}
-          </span>
-          <button
-            className="tour-playback"
-            type="button"
-            aria-label={paused ? "Resume tour" : "Pause tour"}
-            onClick={() => setPaused((value) => !value)}
-          >
-            {paused ? (
-              <Play size={13} aria-hidden="true" />
-            ) : (
-              <Pause size={13} aria-hidden="true" />
-            )}
-            {paused ? "Resume" : "Pause"}
-          </button>
-          <button
-            className="tour-close"
-            type="button"
-            aria-label="Skip tour"
-            onClick={() => onEnd()}
-          >
-            <X size={17} />
-          </button>
+        <div className="tour-pointer" aria-hidden="true">
+          <MousePointer2 size={24} fill="currentColor" strokeWidth={1.5} />
         </div>
+        <div
+          ref={panel}
+          className="tour-bubble"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="matt-tour-title"
+          aria-describedby="matt-tour-description"
+          aria-busy={!step.ready}
+          tabIndex={-1}
+          data-tour-ui="true"
+          data-tour-step={current.id}
+          data-tour-ready={step.ready}
+          style={{
+            left: position?.bubbleX ?? 16,
+            top: position?.bubbleY ?? 26,
+            maxHeight: position?.maxHeight,
+          }}
+        >
+          <h2 id="matt-tour-title">Matt<span className="sr-only"> — {current.title}</span></h2>
+          <TourMessage
+            key={current.id}
+            text={current.explanation}
+            ready={step.ready}
+            paused={paused}
+            reduced={reduced}
+            onComplete={advance}
+          />
+        </div>
+      </motion.div>
+      <div ref={controls} className="tour-progress" role="group" aria-label="Tour controls" data-tour-ui="true">
+        <span>
+          {step.index + 1} of {tourSteps.length}
+        </span>
+        <button
+          className="tour-playback"
+          type="button"
+          aria-label={paused ? "Resume tour" : "Pause tour"}
+          onClick={() => setPaused((value) => !value)}
+        >
+          {paused ? (
+            <Play size={13} aria-hidden="true" />
+          ) : (
+            <Pause size={13} aria-hidden="true" />
+          )}
+          {paused ? "Resume" : "Pause"}
+        </button>
+        <button
+          className="tour-close"
+          type="button"
+          aria-label="Skip tour"
+          onClick={() => onEnd()}
+        >
+          <X size={17} />
+        </button>
       </div>
     </>,
     document.body,

@@ -16,10 +16,25 @@ const targets = [
 ];
 const guide = (page: Page) => page.locator(".tour-bubble");
 const typed = (page: Page) => page.locator(".tour-message-typed");
+async function expectBubbleAttached(page: Page) {
+  const bubble = await guide(page).boundingBox();
+  const pointer = await page.locator(".tour-pointer").boundingBox();
+  expect(bubble).not.toBeNull();
+  expect(pointer).not.toBeNull();
+  // The speech bubble must stay next to the arrow, even while they travel.
+  const verticalGap = bubble!.y >= pointer!.y
+    ? bubble!.y - (pointer!.y + pointer!.height)
+    : pointer!.y - (bubble!.y + bubble!.height);
+  expect(verticalGap).toBeGreaterThanOrEqual(-1);
+  expect(verticalGap).toBeLessThanOrEqual(14);
+  expect(bubble!.x).toBeLessThanOrEqual(pointer!.x + pointer!.width + 1);
+  expect(bubble!.x + bubble!.width).toBeGreaterThanOrEqual(pointer!.x);
+}
 async function freezeTime(page: Page) {
   const now = new Date("2026-10-04T12:00:00+08:00");
   await page.clock.install({ time: now });
-  await page.clock.pauseAt(now);
+  // Freeze before loading the app, allowing setup time on busy machines.
+  await page.clock.pauseAt(new Date(now.getTime() + 60_000));
 }
 async function ready(page: Page, id = "welcome") {
   await expect(guide(page)).toHaveAttribute("data-tour-step", id);
@@ -132,6 +147,7 @@ test("quick typing grows a content-sized bubble and pauses both timers", async (
   await expect(live).toHaveAttribute("data-updates", "0");
   await expect(page.locator(".tour-caret")).toHaveCount(0);
   const fullBox = await guide(page).boundingBox();
+  await expectBubbleAttached(page);
   expect(fullBox!.width).toBeGreaterThan(initialBox!.width);
   expect(fullBox!.height).toBeGreaterThan(initialBox!.height);
   expect(fullBox!.y).toBe(initialBox!.y);
@@ -144,7 +160,11 @@ test("quick typing grows a content-sized bubble and pauses both timers", async (
   await ready(page);
   await page.clock.runFor(200);
   await expect(guide(page)).toHaveAttribute("data-tour-step", "experience");
-  await page.clock.runFor(1000);
+  for (let frame = 0; frame < 10; frame++) {
+    await page.clock.runFor(100);
+    if (await guide(page).isVisible()) await expectBubbleAttached(page);
+    else await expect(page.locator(".tour-pointer")).toBeHidden();
+  }
   await ready(page, "experience");
   await page.keyboard.press("Escape");
   await page.clock.runFor(20000);
@@ -281,6 +301,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       for (let index = 0; index < stops.length; index++) {
         await ready(page, stops[index]);
         const box = await guide(page).boundingBox();
+        await expectBubbleAttached(page);
         expect(box).not.toBeNull();
         expect(box!.x).toBeGreaterThanOrEqual(0);
         expect(box!.x + box!.width).toBeLessThanOrEqual(width);
