@@ -80,7 +80,6 @@ export function TourMessage({
         data-tour-phase={phase}
         data-tour-paused={paused}
       >
-        <span className="tour-message-reserve">{text}</span>
         <span className="tour-message-typed">
           {ready ? (complete ? text : text.slice(0, count)) : ""}
           {phase === "typing" && <span className="tour-caret" />}

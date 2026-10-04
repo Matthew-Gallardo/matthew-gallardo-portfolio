@@ -94,7 +94,7 @@ test("direct section links and the projects route do not show an invitation", as
   await expect(page.getByRole("button", { name: /Take.*tour/ })).toHaveCount(0);
 });
 
-test("quick typing waits for movement, reserves height and pauses both timers", async ({
+test("quick typing grows a content-sized bubble and pauses both timers", async ({
   page,
 }) => {
   await freezeTime(page);
@@ -105,7 +105,7 @@ test("quick typing waits for movement, reserves height and pauses both timers", 
   await expect(page.getByRole("button", { name: /^(Back|Next|Finish)$/ })).toHaveCount(0);
   await page.clock.runFor(1000);
   await ready(page);
-  const fullText = (await page.locator(".tour-message-reserve").textContent())!;
+  const fullText = (await page.locator("#matt-tour-description").textContent())!;
   const initialBox = await guide(page).boundingBox();
   const live = page.locator("#matt-tour-description");
   await expect(live).toHaveText(fullText);
@@ -132,7 +132,8 @@ test("quick typing waits for movement, reserves height and pauses both timers", 
   await expect(live).toHaveAttribute("data-updates", "0");
   await expect(page.locator(".tour-caret")).toHaveCount(0);
   const fullBox = await guide(page).boundingBox();
-  expect(fullBox!.height).toBe(initialBox!.height);
+  expect(fullBox!.width).toBeGreaterThan(initialBox!.width);
+  expect(fullBox!.height).toBeGreaterThan(initialBox!.height);
   expect(fullBox!.y).toBe(initialBox!.y);
   await page.clock.runFor(1000);
   await page.getByRole("button", { name: "Pause tour" }).click();
@@ -156,7 +157,7 @@ test("all seven typed messages advance and complete automatically with replay", 
   await startClocked(page);
   for (let index = 0; index < stops.length; index++) {
     await ready(page, stops[index]);
-    const text = (await page.locator(".tour-message-reserve").textContent())!;
+    const text = (await page.locator("#matt-tour-description").textContent())!;
     const remaining = text.length - (await typed(page).textContent())!.length;
     await page.clock.runFor(remaining * 18 + 20);
     await expect(typed(page)).toHaveText(text);
@@ -244,7 +245,7 @@ test("reduced motion reveals text immediately for eight seconds, skips missing t
   await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
   await expect(page.getByRole("button", { name: "Pause tour" })).toBeVisible();
   await expect(page.locator(".tour-caret")).toHaveCount(0);
-  await expect(typed(page)).toHaveText((await page.locator(".tour-message-reserve").textContent())!);
+  await expect(typed(page)).toHaveText((await page.locator("#matt-tour-description").textContent())!);
   await page.clock.runFor(6500);
   await ready(page);
   await page.evaluate(() =>
@@ -287,6 +288,11 @@ for (const colorScheme of ["light", "dark"] as const) {
         expect(box!.y + box!.height).toBeLessThanOrEqual(
           page.viewportSize()!.height,
         );
+        const controls = await page.locator(".tour-progress").boundingBox();
+        expect(controls!.x).toBeGreaterThanOrEqual(0);
+        expect(controls!.x + controls!.width).toBeLessThanOrEqual(width);
+        expect(controls!.y).toBeGreaterThanOrEqual(box!.y + box!.height);
+        expect(controls!.y + controls!.height).toBeLessThanOrEqual(page.viewportSize()!.height);
         const heading = await page.locator(`#${targets[index]}`).boundingBox();
         expect(heading!.y).toBeGreaterThanOrEqual(width < 1024 ? 64 : 0);
         expect(heading!.y + heading!.height).toBeLessThanOrEqual(box!.y);

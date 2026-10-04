@@ -25,6 +25,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
   const [paused, setPaused] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
   const panel = useRef<HTMLDivElement>(null);
+  const controls = useRef<HTMLDivElement>(null);
   const programmaticScroll = useRef(false);
   const programmedScrollY = useRef<number | null>(null);
   const cancelMovement = useRef<() => void>(() => {});
@@ -68,15 +69,16 @@ export default function TourController({ onEnd }: TourControllerProps) {
       const mobile = width < 768 || height < 600;
       const bubbleHeight = bubble.offsetHeight;
       const bubbleWidth = bubble.offsetWidth;
+      const controlsTop = controls.current?.getBoundingClientRect().top ?? height - 72;
       const below = rect.bottom + 36;
       const next = {
         x: clamp(rect.left - 23, 8, width - 76),
         y: clamp(rect.top + 4, 8, height - 50),
         bubbleX: mobile
-          ? (width - bubbleWidth) / 2
+          ? 16
           : clamp(rect.left + 24, 16, width - bubbleWidth - 16),
         bubbleY: mobile
-          ? height - bubbleHeight - 16
+          ? Math.max(80, controlsTop - bubbleHeight - 12)
           : clamp(
               below + bubbleHeight <= height - 16
                 ? below
@@ -86,7 +88,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
             ),
         visible:
           rect.bottom > 64 &&
-          rect.top < height - (mobile ? bubbleHeight + 36 : 0),
+          rect.top < (mobile ? controlsTop - bubbleHeight - 24 : height),
       };
       setPosition((previous) =>
         previous &&
@@ -107,6 +109,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
     const main = document.getElementById("main-content");
     if (main) contentObserver.observe(main, { childList: true, subtree: true });
     if (panel.current) observer.observe(panel.current);
+    if (controls.current) observer.observe(controls.current);
     const target = document.getElementById(current.target);
     if (target) observer.observe(target);
     window.addEventListener("resize", schedule);
@@ -301,22 +304,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
           visibility: position ? "visible" : "hidden",
         }}
       >
-        <div className="tour-bubble-heading">
-          <div>
-            <h2 id="matt-tour-title">
-              Matt <span>your guide</span>
-            </h2>
-            <p className="tour-step-name">{current.title}</p>
-          </div>
-          <button
-            className="tour-close"
-            type="button"
-            aria-label="Skip tour"
-            onClick={() => onEnd()}
-          >
-            <X size={17} />
-          </button>
-        </div>
+        <h2 id="matt-tour-title">Matt<span className="sr-only"> — {current.title}</span></h2>
         <TourMessage
           key={current.id}
           text={current.explanation}
@@ -325,7 +313,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
           reduced={reduced}
           onComplete={advance}
         />
-        <div className="tour-progress">
+        <div ref={controls} className="tour-progress" role="group" aria-label="Tour controls">
           <span>
             {step.index + 1} of {tourSteps.length}
           </span>
@@ -341,6 +329,14 @@ export default function TourController({ onEnd }: TourControllerProps) {
               <Pause size={13} aria-hidden="true" />
             )}
             {paused ? "Resume" : "Pause"}
+          </button>
+          <button
+            className="tour-close"
+            type="button"
+            aria-label="Skip tour"
+            onClick={() => onEnd()}
+          >
+            <X size={17} />
           </button>
         </div>
       </div>

@@ -41,6 +41,14 @@ The [protected typing preview](https://matthew-gallardo-portfolio-cj20cevhs-matt
 
 The follow-up [protected scroll-fix preview](https://matthew-gallardo-portfolio-2df0f6no5-matthewgallardos-projects.vercel.app), deployment `dpl_718azt5GjK4QXmXjiEw2G9jEPsPa`, also completed all seven stops automatically with reduced motion at 375px in dark mode. Its eight-second reading intervals, final replay state and mobile panel were checked in real time, with no overflow or browser errors.
 
+## Text-fitting tour bubble
+
+The supplied 6.5-second recording was inspected through local browser playback. Its guide starts as a small rounded bubble and expands with the typed words. The portfolio now follows that behavior: intrinsic bubble width up to 320px, compact padding, a quiet Matt label, and natural wrapping. The previous full-message spacer is removed. Pause/Resume, Skip and progress live in a separate fixed pill; mobile bubbles sit above it. This intentionally supersedes the previous reserved-height design.
+
+Type checking, linting, unit checks, content validation, production build and all 36 local Chromium/WebKit tests passed. Visual captures at 375px and 1440px in both themes show the initial bubble growing from about 83×56px to 320×96px for the welcome message, without horizontal overflow or browser errors. Responsive checks cover all seven stops at 320, 375, 768, 1024 and 1440px, and the guide remains keyboard accessible with reduced-motion support.
+
+The [protected bubble preview](https://matthew-gallardo-portfolio-mr2klwrni-matthewgallardos-projects.vercel.app), deployment `dpl_543vdCMKVivQzMWjDFELepx65uit`, was visually checked at 375px and 1440px in both themes. Its full seven-stop sequence completed automatically in real time on mobile, with no browser errors or overflow. Additional responsive assertions verify that the separate controls stay on-screen and below the speech bubble.
+
 ## Address change
 
 On 4 October 2026, `matthew-gallardo.vercel.app` was verified and attached to the existing project. Release `d5597ce` deployed as `dpl_Ci6i3CDigs6R617FodY3k91GwH4Z`. Both routes, PDF resume, favicon, Open Graph image, sitemap and robots return HTTP 200 over HTTPS. Production canonicals, social images, sitemap and robots use the new origin.
