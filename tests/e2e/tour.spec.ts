@@ -183,6 +183,9 @@ test("visitor control pauses playback and navigation cleans up the tour", async 
   await page.mouse.wheel(0, 100);
   await expect(page.getByRole("button", { name: "Resume tour" })).toBeVisible();
   await page.getByRole("button", { name: "Resume tour" }).click();
+  await page.evaluate(() => window.scrollTo({ top: scrollY + 64, behavior: "instant" }));
+  await expect(page.getByRole("button", { name: "Resume tour" })).toBeVisible();
+  await page.getByRole("button", { name: "Resume tour" }).click();
   await page.evaluate(() => {
     Object.defineProperty(document, "hidden", {
       configurable: true,
@@ -237,6 +240,8 @@ test("reduced motion reveals text immediately for eight seconds, skips missing t
   });
   await page.goto("/");
   await startClocked(page);
+  await expect(page.getByRole("button", { name: "Pause tour" })).toBeVisible();
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
   await expect(page.getByRole("button", { name: "Pause tour" })).toBeVisible();
   await expect(page.locator(".tour-caret")).toHaveCount(0);
   await expect(typed(page)).toHaveText((await page.locator(".tour-message-reserve").textContent())!);

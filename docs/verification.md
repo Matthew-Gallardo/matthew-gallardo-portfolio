@@ -35,9 +35,11 @@ The revised guide types at 18ms per character after movement settles, holds each
 
 Type checking, linting, three unit checks, content validation and production build pass. All 36 local Chromium/WebKit browser tests pass, including the retained portfolio regressions. Tour coverage checks typing cadence, stable bubble height, no per-character live announcements, preserved pause time in both phases, all seven automatic stops, automatic completion/replay, reduced motion, blocked storage, missing targets, hidden tabs, navigation cleanup, responsive widths and short screens. Both theme-specific Axe checks pass.
 
-The reduced-motion checks caught a programmatic instant-scroll event arriving after its timer; the controller now waits for rendering frames to flush that scroll before enabling visitor-scroll detection.
+The reduced-motion checks caught delayed programmatic scroll notifications. The controller waits for rendering frames to flush and ignores notifications at the last programmed scroll position, including notifications delivered later under load. Genuine scroll position changes, wheel/touch input and navigation keys still pause the tour. Dedicated checks cover delayed notifications and actual scrolling separately.
 
 The [protected typing preview](https://matthew-gallardo-portfolio-cj20cevhs-matthewgallardos-projects.vercel.app), deployment `dpl_2i1i6rfqwRcP69FH25fWjHxF698J`, completed all seven stops automatically in real time at 375px and 1440px in both themes. Typing, completed messages and the final replay state were visually reviewed. No horizontal overflow or browser errors occurred; preview protection and noindex remain enabled. No dependencies, domains or content claims changed in this revision.
+
+The follow-up [protected scroll-fix preview](https://matthew-gallardo-portfolio-2df0f6no5-matthewgallardos-projects.vercel.app), deployment `dpl_718azt5GjK4QXmXjiEw2G9jEPsPa`, also completed all seven stops automatically with reduced motion at 375px in dark mode. Its eight-second reading intervals, final replay state and mobile panel were checked in real time, with no overflow or browser errors.
 
 ## Address change
 

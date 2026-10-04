@@ -26,6 +26,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
   const [position, setPosition] = useState<Position | null>(null);
   const panel = useRef<HTMLDivElement>(null);
   const programmaticScroll = useRef(false);
+  const programmedScrollY = useRef<number | null>(null);
   const cancelMovement = useRef<() => void>(() => {});
   const focused = useRef(false);
   const current = tourSteps[step.index];
@@ -135,6 +136,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
       clearTimeout(settle);
       cancelAnimationFrame(settleFrame);
       programmaticScroll.current = false;
+      programmedScrollY.current = null;
       setStep((value) => (value.ready ? value : { ...value, ready: true }));
     };
     const frame = requestAnimationFrame(async () => {
@@ -152,13 +154,16 @@ export default function TourController({ onEnd }: TourControllerProps) {
         document.documentElement.scrollHeight - innerHeight,
       );
       programmaticScroll.current = true;
-      if (reduced) window.scrollTo({ top, behavior: "instant" });
+      const scrollTo = (value: number) => {
+        programmedScrollY.current = value;
+        window.scrollTo({ top: value, behavior: "instant" });
+      };
+      if (reduced) scrollTo(top);
       else {
         scrollAnimation = animate(scrollY, top, {
           duration: 0.4,
           ease: [0.22, 1, 0.36, 1],
-          onUpdate: (value) =>
-            window.scrollTo({ top: value, behavior: "instant" }),
+          onUpdate: scrollTo,
         });
         await scrollAnimation;
       }
@@ -205,7 +210,14 @@ export default function TourController({ onEnd }: TourControllerProps) {
       if (!inside(event.target)) interrupt();
     };
     const scroll = () => {
-      if (!programmaticScroll.current) interrupt();
+      // Browsers may dispatch a scroll notification after movement has settled.
+      // A notification at our last position is still our own scroll; actual
+      // visitor movement changes that position (wheel/keys also pause directly).
+      const expected = programmedScrollY.current;
+      if (
+        !programmaticScroll.current &&
+        (expected === null || Math.abs(scrollY - expected) > 1)
+      ) interrupt();
     };
     const key = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
