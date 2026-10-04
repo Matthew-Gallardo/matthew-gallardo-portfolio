@@ -1549,24 +1549,45 @@ section {
   letter-spacing: 0.04em;
 }
 .tour-message {
+  position: relative;
   margin-top: 12px;
   font-size: 14px;
   line-height: 22px;
 }
+.tour-message-reserve {
+  display: block;
+  visibility: hidden;
+  user-select: none;
+}
+.tour-message-typed {
+  position: absolute;
+  inset: 0;
+}
+.tour-caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: currentColor;
+  animation: tour-caret-blink 700ms step-end infinite;
+}
+[data-tour-paused="true"] .tour-caret {
+  animation: none;
+}
+@keyframes tour-caret-blink {
+  50% { opacity: 0; }
+}
 .tour-progress {
-  margin-top: 16px;
+  margin-top: 8px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
   color: #586174;
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
   line-height: 18px;
-}
-.tour-buttons {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
 }
 .tour-bubble button {
   display: inline-flex;
@@ -1587,18 +1608,12 @@ section {
 .tour-bubble button:hover:not(:disabled) {
   background: #eaf0ff;
 }
-.tour-bubble button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.tour-buttons .tour-next {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
-  color: #fff;
-  margin-left: auto;
-}
-.tour-buttons .tour-next:hover:not(:disabled) {
-  background: #1e40af;
+.tour-bubble .tour-playback {
+  border: 0;
+  color: #586174;
+  margin-right: -8px;
+  font-family: inherit;
+  font-size: 11px;
 }
 .tour-bubble .tour-close {
   width: 44px;

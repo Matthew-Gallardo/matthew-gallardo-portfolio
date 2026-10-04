@@ -57,5 +57,7 @@ export const tourSteps = [
   },
 ] as const satisfies readonly TourStep[];
 
-export const TOUR_READING_TIME = 8000;
+export const TOUR_CHARACTER_TIME = 18;
+export const TOUR_READING_TIME = 2500;
+export const TOUR_REDUCED_READING_TIME = 8000;
 export const TOUR_STORAGE_KEY = "mg-portfolio-tour-v1";

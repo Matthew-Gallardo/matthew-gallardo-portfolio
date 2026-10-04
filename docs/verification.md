@@ -29,6 +29,16 @@ Type checking, linting, unit tests and production build passed. All 15 focused C
 - Release `d5597ce` passed [GitHub CI](https://github.com/Matthew-Gallardo/matthew-gallardo-portfolio/actions/runs/37158708139), including strict install, type checking, linting, unit checks, build and the complete Chromium/Firefox/WebKit suite. All 11 focused tour/navigation checks also passed against the public new origin.
 - Production visual captures at 375px and 1440px in both themes confirm all seven stops, reserved positions, readable panels and no overflow or console errors.
 
+## Automatic typing tour revision
+
+The revised guide types at 18ms per character after movement settles, holds each completed message for 2.5 seconds, and completes all seven stops automatically. Back, Next and Finish have been removed; Pause/Resume and Skip remain. The full message height is reserved, with a single full-text announcement per stop for assistive technology. Reduced motion reveals text immediately and allows eight seconds per stop.
+
+Type checking, linting, three unit checks, content validation and production build pass. All 36 local Chromium/WebKit browser tests pass, including the retained portfolio regressions. Tour coverage checks typing cadence, stable bubble height, no per-character live announcements, preserved pause time in both phases, all seven automatic stops, automatic completion/replay, reduced motion, blocked storage, missing targets, hidden tabs, navigation cleanup, responsive widths and short screens. Both theme-specific Axe checks pass.
+
+The reduced-motion checks caught a programmatic instant-scroll event arriving after its timer; the controller now waits for rendering frames to flush that scroll before enabling visitor-scroll detection.
+
+The [protected typing preview](https://matthew-gallardo-portfolio-cj20cevhs-matthewgallardos-projects.vercel.app), deployment `dpl_2i1i6rfqwRcP69FH25fWjHxF698J`, completed all seven stops automatically in real time at 375px and 1440px in both themes. Typing, completed messages and the final replay state were visually reviewed. No horizontal overflow or browser errors occurred; preview protection and noindex remain enabled. No dependencies, domains or content claims changed in this revision.
+
 ## Address change
 
 On 4 October 2026, `matthew-gallardo.vercel.app` was verified and attached to the existing project. Release `d5597ce` deployed as `dpl_Ci6i3CDigs6R617FodY3k91GwH4Z`. Both routes, PDF resume, favicon, Open Graph image, sitemap and robots return HTTP 200 over HTTPS. Production canonicals, social images, sitemap and robots use the new origin.

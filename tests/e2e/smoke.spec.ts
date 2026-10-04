@@ -25,10 +25,12 @@ test("page renders without hydration errors and navigation works", async ({
     "data-tour-ready",
     "true",
   );
-  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByRole("button", { name: /^(Back|Next|Finish)$/ })).toHaveCount(0);
+  await expect(page.locator('.tour-message[data-tour-phase="typing"]')).toBeVisible();
   await expect(page.locator(".tour-bubble")).toHaveAttribute(
     "data-tour-step",
     "experience",
+    { timeout: 10000 },
   );
   await page.getByRole("button", { name: "Skip tour" }).click();
   await expect(page.locator(".tour-bubble")).toHaveCount(0);

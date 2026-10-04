@@ -4,16 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { animate } from "motion";
 import { motion, useReducedMotion } from "motion/react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  MousePointer2,
-  Pause,
-  Play,
-  X,
-} from "lucide-react";
-import { tourSteps, TOUR_READING_TIME } from "@/content/tour";
+import { MousePointer2, Pause, Play, X } from "lucide-react";
+import { tourSteps } from "@/content/tour";
+import { TourMessage } from "./tour-message";
 
 export type TourControllerProps = { onEnd: (restoreFocus?: boolean) => void };
 type Position = {
@@ -27,19 +20,15 @@ const clamp = (value: number, minimum: number, maximum: number) =>
   Math.min(Math.max(value, minimum), Math.max(minimum, maximum));
 
 export default function TourController({ onEnd }: TourControllerProps) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotion() ?? false;
   const [step, setStep] = useState({ index: 0, ready: false });
-  const [paused, setPaused] = useState(
-    () => matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  const [paused, setPaused] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
   const panel = useRef<HTMLDivElement>(null);
   const programmaticScroll = useRef(false);
   const cancelMovement = useRef<() => void>(() => {});
   const focused = useRef(false);
-  const reading = useRef({ index: -1, remaining: TOUR_READING_TIME });
   const current = tourSteps[step.index];
-  const last = step.index === tourSteps.length - 1;
 
   useEffect(() => {
     if (position && !focused.current) {
@@ -49,18 +38,14 @@ export default function TourController({ onEnd }: TourControllerProps) {
   }, [position]);
 
   const advance = useCallback(
-    (direction: number) => {
-      for (
-        let index = step.index + direction;
-        index >= 0 && index < tourSteps.length;
-        index += direction
-      ) {
+    () => {
+      for (let index = step.index + 1; index < tourSteps.length; index++) {
         if (document.getElementById(tourSteps[index].target)) {
           setStep({ index, ready: false });
           return;
         }
       }
-      if (direction > 0) onEnd();
+      onEnd();
     },
     [step.index, onEnd],
   );
@@ -72,7 +57,7 @@ export default function TourController({ onEnd }: TourControllerProps) {
       const target = document.getElementById(current.target);
       const bubble = panel.current;
       if (!target) {
-        advance(1);
+        advance();
         return;
       }
       if (!bubble) return;
@@ -141,19 +126,21 @@ export default function TourController({ onEnd }: TourControllerProps) {
     let cancelled = false;
     let interrupted = false;
     let settle: ReturnType<typeof setTimeout> | undefined;
+    let settleFrame = 0;
     let scrollAnimation: ReturnType<typeof animate> | undefined;
     const target = document.getElementById(current.target);
     cancelMovement.current = () => {
       interrupted = true;
       scrollAnimation?.stop();
       clearTimeout(settle);
+      cancelAnimationFrame(settleFrame);
       programmaticScroll.current = false;
       setStep((value) => (value.ready ? value : { ...value, ready: true }));
     };
     const frame = requestAnimationFrame(async () => {
       if (interrupted) return;
       if (!target) {
-        advance(1);
+        advance();
         return;
       }
       target.setAttribute("data-tour-active", "true");
@@ -177,40 +164,29 @@ export default function TourController({ onEnd }: TourControllerProps) {
       }
       if (cancelled || interrupted) return;
       // Reading time begins after both scrolling and pointer travel settle.
-      settle = setTimeout(
-        () => {
-          programmaticScroll.current = false;
-          setStep((value) => ({ ...value, ready: true }));
-        },
-        reduced ? 0 : 420,
-      );
+      const arrived = () => {
+        programmaticScroll.current = false;
+        setStep((value) => ({ ...value, ready: true }));
+      };
+      if (reduced) {
+        // Instant scroll events arrive on a rendering frame. Keep them marked
+        // as programmatic until they have flushed, rather than pausing ourselves.
+        settleFrame = requestAnimationFrame(() => {
+          settleFrame = requestAnimationFrame(arrived);
+        });
+      } else settle = setTimeout(arrived, 420);
     });
     return () => {
       cancelled = true;
       cancelAnimationFrame(frame);
       clearTimeout(settle);
+      cancelAnimationFrame(settleFrame);
       scrollAnimation?.stop();
       programmaticScroll.current = false;
       target?.removeAttribute("data-tour-active");
       cancelMovement.current = () => {};
     };
   }, [current.target, reduced, advance]);
-
-  useEffect(() => {
-    if (reading.current.index !== step.index)
-      reading.current = { index: step.index, remaining: TOUR_READING_TIME };
-    if (paused || !step.ready || last) return;
-    const budget = reading.current;
-    const started = performance.now();
-    const timeout = setTimeout(() => advance(1), budget.remaining);
-    return () => {
-      clearTimeout(timeout);
-      budget.remaining = Math.max(
-        0,
-        budget.remaining - (performance.now() - started),
-      );
-    };
-  }, [step.index, step.ready, paused, last, advance]);
 
   useEffect(() => {
     const inside = (target: EventTarget | null) =>
@@ -329,57 +305,30 @@ export default function TourController({ onEnd }: TourControllerProps) {
             <X size={17} />
           </button>
         </div>
-        <p
-          id="matt-tour-description"
-          className="tour-message"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {current.explanation}
-        </p>
+        <TourMessage
+          key={current.id}
+          text={current.explanation}
+          ready={step.ready}
+          paused={paused}
+          reduced={reduced}
+          onComplete={advance}
+        />
         <div className="tour-progress">
           <span>
             {step.index + 1} of {tourSteps.length}
           </span>
-          <span>
-            {last ? "Your turn to explore" : paused ? "Paused" : "Auto tour"}
-          </span>
-        </div>
-        <div className="tour-buttons">
           <button
+            className="tour-playback"
             type="button"
-            disabled={step.index === 0 || !step.ready}
-            onClick={() => advance(-1)}
+            aria-label={paused ? "Resume tour" : "Pause tour"}
+            onClick={() => setPaused((value) => !value)}
           >
-            <ArrowLeft size={14} aria-hidden="true" />
-            Back
-          </button>
-          {!last && (
-            <button
-              type="button"
-              aria-label={paused ? "Resume tour" : "Pause tour"}
-              onClick={() => setPaused((value) => !value)}
-            >
-              {paused ? (
-                <Play size={13} aria-hidden="true" />
-              ) : (
-                <Pause size={13} aria-hidden="true" />
-              )}
-              {paused ? "Resume" : "Pause"}
-            </button>
-          )}
-          <button
-            className="tour-next"
-            type="button"
-            disabled={!step.ready}
-            onClick={() => (last ? onEnd() : advance(1))}
-          >
-            {last ? "Finish" : "Next"}
-            {last ? (
-              <Check size={14} aria-hidden="true" />
+            {paused ? (
+              <Play size={13} aria-hidden="true" />
             ) : (
-              <ArrowRight size={14} aria-hidden="true" />
+              <Pause size={13} aria-hidden="true" />
             )}
+            {paused ? "Resume" : "Pause"}
           </button>
         </div>
       </div>

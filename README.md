@@ -73,11 +73,11 @@ The home page orders Experience, Stack, Projects, Activity, Education and Contac
 
 ## Matt guided tour
 
-The homepage offers an optional “Take a tour with Matt” invitation. Nothing scrolls until the visitor starts it. A decorative Matt pointer introduces seven stops, with eight seconds of reading time after movement settles. Pause/Resume, Back, Next, Skip and Finish remain available; the final stop waits for Finish. The footer always offers replay on the homepage.
+The homepage offers an optional “Take a tour with Matt” invitation. Nothing scrolls until the visitor starts it. After scrolling and pointer movement settle, Matt types each explanation at 18ms per character, then leaves the completed message visible for 2.5 seconds before advancing. All seven stops and completion are automatic. Only Pause/Resume, Skip and the step counter remain; the footer always offers replay.
 
 Edit the typed steps in `src/content/tour.ts`, keeping targets aligned with real heading IDs. The controller loads only when requested. Dismissal/completion is stored under `mg-portfolio-tour-v1`; blocked storage falls back to session memory. Direct section links suppress the invitation, and `/projects` has no tour.
 
-Manual scrolling or interaction pauses progression, hidden tabs pause until explicitly resumed, and page links or mobile navigation end the tour. Escape dismisses it and restores focus. Reduced motion removes travel and defaults to manual Next steps. Short screens use the same compact bottom panel as phones. No content or essential action depends on the guide or JavaScript.
+Pause preserves the current character and remaining reading time. Manual scrolling or interaction pauses progression, hidden tabs pause until explicitly resumed, and page links or mobile navigation end the tour. Escape dismisses it and restores focus. Reduced motion removes travel and typing, shows each complete explanation immediately after arrival, and advances after eight seconds. Short screens use the same compact bottom panel as phones. The bubble reserves the full message height, and screen readers receive each explanation once instead of character updates. No content or essential action depends on the guide or JavaScript.
 
 ## Replace the portrait or project images
 
